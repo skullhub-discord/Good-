@@ -2,16 +2,68 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Raw Script Source</title>
+    <title>Raw Script Host</title>
 </head>
-<body style="background-color: #000000; margin: 0; padding: 15px;">
-<pre style="color: #ffffff; font-size: 18px; font-family: monospace; word-wrap: break-word; white-space: pre-wrap; margin: 0;">
--- Paste your raw script or code here. 
--- The background is black, text is white, and font size is enlarged.
+<body style="background-color: #000000; margin: 0; padding: 15px; font-family: monospace;">
 
-local function test()
-    print("Hello world")
-end
-</pre>
+<script>
+    // Check if there is encoded code in the URL hash
+    if (window.location.hash) {
+        try {
+            // Decode the base64 string back into the raw script text
+            const base64Data = window.location.hash.substring(1);
+            const decodedScript = atob(base64Data);
+            
+            // Output exactly like raw github
+            document.write(`<pre style="color: #ffffff; font-size: 18px; word-wrap: break-word; white-space: pre-wrap; margin: 0;">${escapeHtml(decodedScript)}</pre>`);
+        } catch(e) {
+            document.write(`<pre style="color: #ff5555; font-size: 18px;">Error decoding script data.</pre>`);
+        }
+    } else {
+        // If no script is loaded in the URL, show the Generator Interface
+        document.write(`
+            <div style="max-width: 600px; margin: 40px auto; background: #111; padding: 20px; border-radius: 8px; border: 1px solid #333; color: #fff;">
+                <h2 style="margin-top:0;">Luau Script Host Generator</h2>
+                <p style="color:#aaa; font-size:14px;">Paste your script below to generate a direct raw loadstring link.</p>
+                <textarea id="scriptInput" style="width:100%; height:250px; background:#000; color:#fff; border:1px solid #444; padding:10px; font-family:monospace; box-sizing:border-box;" placeholder="print('Hello from Meow Hub!')"></textarea>
+                <button onclick="generateLink()" style="margin-top:15px; background:#2ea043; color:#white; border:none; padding:10px 20px; font-weight:bold; cursor:pointer; border-radius:4px;">Generate Link</button>
+                
+                <div id="resultSection" style="display:none; margin-top:20px; border-top:1px solid #333; padding-top:20px;">
+                    <p style="color:#4fba74; font-weight:bold; margin:0 0 5px 0;">Your Loadstring:</p>
+                    <input id="loadstringOutput" type="text" readonly style="width:100%; background:#222; color:#fff; border:1px solid #444; padding:8px; font-family:monospace; box-sizing:border-box;">
+                    <button onclick="copyLoadstring()" style="margin-top:8px; background:#333; color:#fff; border:1px solid #555; padding:5px 10px; cursor:pointer; font-size:12px;">Copy Loadstring</button>
+                </div>
+            </div>
+        `);
+    }
+
+    function escapeHtml(text) {
+        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function generateLink() {
+        const code = document.getElementById("scriptInput").value;
+        if (!code.trim()) return alert("Paste some code first!");
+        
+        // Convert script to base64 safely
+        const base64 = btoa(unescape(encodeURIComponent(code)));
+        const rawUrl = window.location.origin + window.location.pathname + "#" + base64;
+        
+        // Format it perfectly as a ready-to-paste Roblox loadstring
+        const loadstringStr = `loadstring(game:HttpGet("${rawUrl}"))()`;
+        
+        document.getElementById("loadstringOutput").value = loadstringStr;
+        document.getElementById("resultSection").style.display = "block";
+    }
+
+    function copyLoadstring() {
+        const copyText = document.getElementById("loadstringOutput");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value);
+        alert("Loadstring copied to clipboard!");
+    }
+</script>
+
 </body>
 </html>
