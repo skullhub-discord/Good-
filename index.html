@@ -2,67 +2,71 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Raw Script Host</title>
+    <title>Loadstring Format Generator</title>
 </head>
-<body style="background-color: #000000; margin: 0; padding: 15px; font-family: monospace;">
+<body style="background-color: #000000; margin: 0; padding: 20px; font-family: monospace; color: #ffffff;">
+
+<div style="max-width: 650px; margin: 20px auto; background: #0d1117; padding: 25px; border-radius: 8px; border: 1px solid #30363d;">
+    <h2 style="margin-top: 0; color: #f0f6fc; font-size: 20px; border-bottom: 1px solid #30363d; padding-bottom: 10px;">Loadstring Builder</h2>
+    
+    <p style="color: #8b949e; font-size: 14px;">Enter your GitHub repository information to generate the exact raw format:</p>
+
+    <!-- Inputs aligned with your exact example format -->
+    <div style="margin-bottom: 12px;">
+        <label style="display:block; margin-bottom:5px; color:#c9d1d9;">GitHub Username:</label>
+        <input type="text" id="username" placeholder="e.g., finwo67" style="width:100%; background:#010409; color:#fff; border:1px solid #30363d; padding:8px; box-sizing:border-box; border-radius:4px;">
+    </div>
+
+    <div style="margin-bottom: 12px;">
+        <label style="display:block; margin-bottom:5px; color:#c9d1d9;">Repository Name:</label>
+        <input type="text" id="repo" placeholder="e.g., python.hackrage" style="width:100%; background:#010409; color:#fff; border:1px solid #30363d; padding:8px; box-sizing:border-box; border-radius:4px;">
+    </div>
+
+    <div style="margin-bottom: 12px;">
+        <label style="display:block; margin-bottom:5px; color:#c9d1d9;">Branch:</label>
+        <input type="text" id="branch" value="main" placeholder="e.g., main" style="width:100%; background:#010409; color:#fff; border:1px solid #30363d; padding:8px; box-sizing:border-box; border-radius:4px;">
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <label style="display:block; margin-bottom:5px; color:#c9d1d9;">File Name / Path:</label>
+        <input type="text" id="filename" placeholder="e.g., python.hackrage" style="width:100%; background:#010409; color:#fff; border:1px solid #30363d; padding:8px; box-sizing:border-box; border-radius:4px;">
+    </div>
+
+    <button onclick="buildGitHubLoadstring()" style="background:#238636; color:white; border:none; padding:10px 20px; font-weight:bold; cursor:pointer; border-radius:4px; font-size:14px;">Build Loadstring</button>
+
+    <div id="outputContainer" style="display:none; margin-top: 25px; border-top: 1px solid #30363d; padding-top: 20px;">
+        <span style="color: #58a6ff; font-weight: bold; display: block; margin-bottom: 8px;">Resulting Execution String:</span>
+        <input type="text" id="finalOutput" readonly style="width:100%; background:#161b22; color:#58a6ff; border:1px solid #30363d; padding:10px; font-family:monospace; box-sizing:border-box; border-radius:4px; font-size:13px;">
+        <button onclick="copyResult()" style="margin-top: 10px; background: #21262d; color: #c9d1d9; border: 1px solid #30363d; padding: 6px 12px; cursor: pointer; border-radius: 4px; font-size: 12px;">Copy to Clipboard</button>
+    </div>
+</div>
 
 <script>
-    // Check if there is encoded code in the URL hash
-    if (window.location.hash) {
-        try {
-            // Decode the base64 string back into the raw script text
-            const base64Data = window.location.hash.substring(1);
-            const decodedScript = atob(base64Data);
-            
-            // Output exactly like raw github
-            document.write(`<pre style="color: #ffffff; font-size: 18px; word-wrap: break-word; white-space: pre-wrap; margin: 0;">${escapeHtml(decodedScript)}</pre>`);
-        } catch(e) {
-            document.write(`<pre style="color: #ff5555; font-size: 18px;">Error decoding script data.</pre>`);
-        }
-    } else {
-        // If no script is loaded in the URL, show the Generator Interface
-        document.write(`
-            <div style="max-width: 600px; margin: 40px auto; background: #111; padding: 20px; border-radius: 8px; border: 1px solid #333; color: #fff;">
-                <h2 style="margin-top:0;">Luau Script Host Generator</h2>
-                <p style="color:#aaa; font-size:14px;">Paste your script below to generate a direct raw loadstring link.</p>
-                <textarea id="scriptInput" style="width:100%; height:250px; background:#000; color:#fff; border:1px solid #444; padding:10px; font-family:monospace; box-sizing:border-box;" placeholder="print('Hello from Meow Hub!')"></textarea>
-                <button onclick="generateLink()" style="margin-top:15px; background:#2ea043; color:#white; border:none; padding:10px 20px; font-weight:bold; cursor:pointer; border-radius:4px;">Generate Link</button>
-                
-                <div id="resultSection" style="display:none; margin-top:20px; border-top:1px solid #333; padding-top:20px;">
-                    <p style="color:#4fba74; font-weight:bold; margin:0 0 5px 0;">Your Loadstring:</p>
-                    <input id="loadstringOutput" type="text" readonly style="width:100%; background:#222; color:#fff; border:1px solid #444; padding:8px; font-family:monospace; box-sizing:border-box;">
-                    <button onclick="copyLoadstring()" style="margin-top:8px; background:#333; color:#fff; border:1px solid #555; padding:5px 10px; cursor:pointer; font-size:12px;">Copy Loadstring</button>
-                </div>
-            </div>
-        `);
+function buildGitHubLoadstring() {
+    const user = document.getElementById("username").value.trim();
+    const repo = document.getElementById("repo").value.trim();
+    const branch = document.getElementById("branch").value.trim();
+    const file = document.getElementById("filename").value.trim();
+
+    if (!user || !repo || !file) {
+        alert("Please fill out Username, Repository, and File Name fields.");
+        return;
     }
 
-    function escapeHtml(text) {
-        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
+    // Constructs the absolute target structure matching refs/heads/
+    const targetUrl = `https://raw.githubusercontent.com/${user}/${repo}/refs/heads/${branch}/${file}`;
+    const formattedLoadstring = `loadstring(game:HttpGet("${targetUrl}"))()`;
 
-    function generateLink() {
-        const code = document.getElementById("scriptInput").value;
-        if (!code.trim()) return alert("Paste some code first!");
-        
-        // Convert script to base64 safely
-        const base64 = btoa(unescape(encodeURIComponent(code)));
-        const rawUrl = window.location.origin + window.location.pathname + "#" + base64;
-        
-        // Format it perfectly as a ready-to-paste Roblox loadstring
-        const loadstringStr = `loadstring(game:HttpGet("${rawUrl}"))()`;
-        
-        document.getElementById("loadstringOutput").value = loadstringStr;
-        document.getElementById("resultSection").style.display = "block";
-    }
+    document.getElementById("finalOutput").value = formattedLoadstring;
+    document.getElementById("outputContainer").style.display = "block";
+}
 
-    function copyLoadstring() {
-        const copyText = document.getElementById("loadstringOutput");
-        copyText.select();
-        copyText.setSelectionRange(0, 99999);
-        navigator.clipboard.writeText(copyText.value);
-        alert("Loadstring copied to clipboard!");
-    }
+function copyResult() {
+    const outputField = document.getElementById("finalOutput");
+    outputField.select();
+    outputField.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(outputField.value);
+}
 </script>
 
 </body>
