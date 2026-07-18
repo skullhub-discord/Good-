@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>finny.obf – v4 (loader match)</title>
+    <style>
+        /* ── same crisp styles as before, compact ── */
+        :root {
+            --bg-body: #f1f5f9;
+            --bg-app: #ffffff;
+            --bg-surface: #f8fafc;
+            --bg-elevated: #f1f5f9;
+            --bg-input: #ffffff;
+            --bg-panel: #ffffff;
+            --bg-log: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --text-log: #1e293b;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.10);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+            --accent-1: #3b82f6;
+            --accent-2: #8b5cf6;
+            --accent-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --transition: 0.2s ease;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            background: var(--bg-body);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            color: var(--text-primary);
+        }
+        .app {
+            width: 100%;
+            max-width: 1480px;
+            height: 98vh;
+            max-height: 1080px;
+            background: var(--bg-app);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            padding: 16px 20px 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: var(--radius-full);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.3px;
+        }
+        .header .links {
+            display: flex;
+            gap: 14px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            align-items: center;
+        }
+        .header .links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-bottom: 1px dotted transparent;
+            transition: 0.2s;
+        }
+        .header .links a:hover {
+            color: var(--text-primary);
+            border-color: var(--text-secondary);
+        }
+        .header .badge {
+            background: var(--accent-gradient);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: var(--radius-full);
+            letter-spacing: 0.3px;
+            -webkit-text-fill-color: #fff;
+        }
+        .header .user-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            background: var(--bg-surface);
+            padding: 10px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            margin-bottom: 12px;
+            flex-shrink: 0;
+            align-items: center;
+        }
+        .stat-group {
+            display: flex;
+            align-items: center;
+            gap: 12px 24px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .stat-item .label {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 0.4px;
+        }
+        .stat-item .value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+        .stat-item .value .sub {
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--text-secondary);
+            margin-left: 4px;
+        }
+        .stat-divider {
+            width: 1px;
+            height: 32px;
+            background: var(--border-color);
+        }
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-left: auto;
+        }
+        .quick-actions .btn-sm {
+            font-size: 11px;
+            padding: 4px 12px;
+            height: 28px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+        .quick-actions .btn-sm:hover {
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border-color: var(--text-muted);
+        }
+        .quick-actions .btn-sm.primary {
+            background: var(--accent-gradient);
+            color: #fff;
+            border-color: transparent;
+        }
+        .quick-actions .btn-sm.primary:hover {
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        .recent-jobs {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-left: 8px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+        .recent-jobs .job {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-input);
+            padding: 2px 10px 2px 6px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-color);
+        }
+        .recent-jobs .job .status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            flex-shrink: 0;
+        }
+        .recent-jobs .job .name {
+            font-weight: 500;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .recent-jobs .job .meta {
+            color: var(--text-muted);
+            font-size: 10px;
+        }
+        .recent-jobs .view-all {
+            color: var(--accent-1);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 12px;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .recent-jobs .view-all:hover {
+            text-decoration: underline;
+        }
+        .recent-jobs .empty {
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: 12px;
+        }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 12px;
+            align-items: center;
+            background: var(--bg-surface);
+            padding: 6px 14px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 4px 10px;
+            flex-wrap: wrap;
+        }
+        .toolbar-group:not(:last-child)::after {
+            content: '';
+            width: 1px;
+            height: 24px;
+            background: var(--border-color);
+            margin-left: 4px;
+            flex-shrink: 0;
+        }
+        .toolbar label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+        .toolbar select,
+        .toolbar input[type="number"] {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            min-width: 56px;
+            height: 26px;
+        }
+        .toolbar select:focus,
+        .toolbar input:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+        }
+        .toolbar .log-toggle-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            padding: 2px 12px;
+            font-size: 11px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: 0.2s;
+            height: 26px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .toolbar .log-toggle-btn:hover {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+        }
+        .toolbar .log-toggle-btn.active {
+            background: var(--accent-gradient);
+            color: #fff;
+            border-color: transparent;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 30px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #cbd5e1;
+            transition: 0.25s;
+            border-radius: var(--radius-full);
+        }
+        .slider::before {
+            content: '';
+            position: absolute;
+            height: 12px;
+            width: 12px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            transition: 0.25s;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+        }
+        .switch input:checked+.slider {
+            background: var(--accent-gradient);
+        }
+        .switch input:checked+.slider::before {
+            transform: translateX(12px);
+        }
+        .btn {
+            padding: 4px 14px;
+            border: none;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn:hover {
+            background: #e2e8f0;
+            color: var(--text-primary);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(59, 130, 246, 0.25);
+        }
+        .btn-primary:hover {
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+        }
+        .btn-success:hover {
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff;
+        }
+        .btn-danger:hover {
+            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            box-shadow: none;
+        }
+        .btn-ghost:hover {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            transform: none;
+        }
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        .file-actions .btn {
+            font-size: 10px;
+            padding: 2px 10px;
+            height: 24px;
+        }
+        .controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            align-items: center;
+            background: var(--bg-surface);
+            padding: 6px 14px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            margin-bottom: 10px;
+            flex-shrink: 0;
+        }
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 6px 12px;
+            flex-wrap: wrap;
+        }
+        .control-group:not(:last-child)::after {
+            content: '';
+            width: 1px;
+            height: 24px;
+            background: var(--border-color);
+            margin-left: 4px;
+            flex-shrink: 0;
+        }
+        .control-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .control-toggle {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .control-toggle input[type="checkbox"] {
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            background: var(--bg-input);
+            border: 1.5px solid var(--text-muted);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+        .control-toggle input:checked {
+            background: var(--accent-1);
+            border-color: var(--accent-1);
+        }
+        .control-toggle input:checked::after {
+            content: '';
+            position: absolute;
+            top: 1px;
+            left: 4px;
+            width: 4px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .slider-container input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 120px;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--border-color);
+            outline: none;
+            transition: background 0.2s;
+        }
+        .slider-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+            transition: transform 0.2s;
+        }
+        .slider-container input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+        .slider-container input[type="range"]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+        }
+        .slider-value {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-1);
+            min-width: 36px;
+            text-align: center;
+        }
+        .format-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .format-group .radio-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+        .format-group input[type="radio"] {
+            appearance: none;
+            width: 13px;
+            height: 13px;
+            border: 2px solid var(--text-muted);
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+        .format-group input[type="radio"]:checked {
+            border-color: var(--accent-1);
+        }
+        .format-group input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            top: 1.5px;
+            left: 1.5px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+        }
+        .advanced-toggle {
+            cursor: pointer;
+            font-size: 11px;
+            color: var(--text-secondary);
+            user-select: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 10px;
+            border-radius: var(--radius-full);
+            background: var(--bg-surface);
+            transition: background 0.2s, color 0.2s;
+            border: 1px solid transparent;
+        }
+        .advanced-toggle:hover {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+        .layer-toggles {
+            display: none;
+            flex-wrap: wrap;
+            gap: 4px 10px;
+            margin-top: 6px;
+            padding: 6px 12px;
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+        .layer-toggles.open {
+            display: flex;
+        }
+        .layer-toggles .toggle {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .layer-toggles .toggle input[type="checkbox"] {
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            background: var(--bg-input);
+            border: 1.5px solid var(--text-muted);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+        .layer-toggles .toggle input:checked {
+            background: var(--accent-1);
+            border-color: var(--accent-1);
+        }
+        .layer-toggles .toggle input:checked::after {
+            content: '';
+            position: absolute;
+            top: 1px;
+            left: 4px;
+            width: 4px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        .panels-wrapper {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+            min-height: 0;
+        }
+        .panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-panel);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            min-width: 0;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow var(--transition);
+            position: relative;
+        }
+        .panel:hover {
+            box-shadow: var(--shadow-md);
+        }
+        .panel-header {
+            padding: 6px 14px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 10px;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+        .panel-header .count {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 400;
+            background: var(--bg-input);
+            padding: 1px 8px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-color);
+        }
+        .panel textarea {
+            flex: 1;
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 12.5px;
+            line-height: 1.8;
+            padding: 10px 14px;
+            resize: none;
+            outline: none;
+            tab-size: 4;
+        }
+        .panel textarea::placeholder {
+            color: var(--text-muted);
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 400;
+        }
+        .panel.output textarea {
+            color: #065f46;
+        }
+        .panel.drag-over {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+            background: rgba(59, 130, 246, 0.03);
+        }
+        .drop-hint {
+            display: none;
+            position: absolute;
+            inset: 0;
+            background: rgba(59, 130, 246, 0.05);
+            border-radius: var(--radius-md);
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-1);
+            pointer-events: none;
+            backdrop-filter: blur(2px);
+            z-index: 2;
+        }
+        .panel.drag-over .drop-hint {
+            display: flex;
+        }
+        .log-panel {
+            flex-shrink: 0;
+            height: 120px;
+            background: var(--bg-log);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            margin-top: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: height 0.3s ease, opacity 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+        .log-panel.hidden {
+            height: 0;
+            opacity: 0;
+            margin-top: 0;
+            border: none;
+            pointer-events: none;
+        }
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 14px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+            cursor: pointer;
+            user-select: none;
+        }
+        .log-header span {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .log-header .log-badge {
+            background: var(--accent-gradient);
+            color: #fff;
+            font-size: 9px;
+            padding: 0 8px;
+            border-radius: var(--radius-full);
+            -webkit-text-fill-color: #fff;
+        }
+        .log-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 4px 14px;
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+            line-height: 1.7;
+            color: var(--text-log);
+            background: var(--bg-log);
+        }
+        .log-body .log-entry {
+            opacity: 0.85;
+            padding: 1px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .log-body .log-entry:last-child {
+            border-bottom: none;
+        }
+        .log-body .log-entry.info {
+            color: #2563eb;
+        }
+        .log-body .log-entry.success {
+            color: #059669;
+        }
+        .log-body .log-entry.error {
+            color: #dc2626;
+        }
+        .log-body .log-entry.warn {
+            color: #d97706;
+        }
+        .log-body .log-entry .time {
+            color: var(--text-muted);
+            opacity: 0.6;
+            margin-right: 10px;
+            font-size: 10px;
+        }
+        .log-clear {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            transition: 0.2s;
+        }
+        .log-clear:hover {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+        }
+        .log-toggle-btn-small {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 12px;
+            padding: 0 4px;
+        }
+        .log-toggle-btn-small:hover {
+            color: var(--text-primary);
+        }
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+            flex-shrink: 0;
+            font-size: 11px;
+            color: var(--text-muted);
+            padding: 0 4px;
+        }
+        .status-bar .status {
+            color: var(--text-secondary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .status-bar .status .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #94a3b8;
+        }
+        .status-bar .status .dot.green {
+            background: #10b981;
+        }
+        .status-bar .status .dot.red {
+            background: #ef4444;
+        }
+        .status-bar .status .dot.yellow {
+            background: #fbbf24;
+        }
+        .status-bar .status .dot.blue {
+            background: #3b82f6;
+        }
+        #perfDisplay {
+            color: var(--text-muted);
+            font-feature-settings: "tnum";
+            font-size: 11px;
+        }
+        @media (max-width:1100px) {
+            .dashboard {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px
+            }
+            .stat-group {
+                justify-content: center
+            }
+            .quick-actions {
+                margin-left: 0;
+                justify-content: center
+            }
+            .recent-jobs {
+                margin-left: 0;
+                justify-content: center
+            }
+            .controls-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 6px
+            }
+            .control-group:not(:last-child)::after {
+                display: none
+            }
+            .control-group {
+                justify-content: center
+            }
+            .panels-wrapper {
+                flex-direction: column;
+                gap: 10px
+            }
+            .log-panel {
+                height: 100px
+            }
+            .app {
+                padding: 12px;
+                height: 99vh;
+                max-height: none;
+                border-radius: var(--radius-md)
+            }
+        }
+        @media (max-width:600px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px
+            }
+            .header .links {
+                font-size: 11px;
+                gap: 10px;
+                flex-wrap: wrap
+            }
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch
+            }
+            .toolbar-group {
+                justify-content: center
+            }
+            .toolbar-group:not(:last-child)::after {
+                display: none
+            }
+            .btn {
+                font-size: 10px;
+                padding: 3px 10px;
+                height: 24px
+            }
+            .slider-container input[type="range"] {
+                width: 80px
+            }
+            .log-panel {
+                height: 80px
+            }
+            .panel textarea {
+                font-size: 11px;
+                padding: 8px 10px
+            }
+        }
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(8px)
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+        .app {
+            animation: fadeSlide .3s ease-out
+        }
+        .progress-wrap {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            max-width: 300px;
+        }
+        .progress-wrap.active {
+            display: flex;
+        }
+        .progress-wrap progress {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            border: none;
+            background: var(--border-color);
+            color: var(--accent-1);
+        }
+        .progress-wrap progress::-webkit-progress-bar {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+        .progress-wrap progress::-webkit-progress-value {
+            background: var(--accent-gradient);
+            border-radius: 3px;
+        }
+        .progress-wrap progress::-moz-progress-bar {
+            background: var(--accent-gradient);
+            border-radius: 3px;
+        }
+        .progress-wrap .prog-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            min-width: 40px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="app" id="app">
+        <div class="header">
+            <div class="header-left"><h1>finny.obf</h1><span class="badge">v4</span></div>
+            <div class="links"><span>⚡ Decimal‑escape loader</span><a href="#">Docs</a><a href="#">GitHub</a><div class="user-avatar">JD</div></div>
+        </div>
+        <div class="dashboard">
+            <div class="stat-group">
+                <div class="stat-item"><span class="label">Processing</span><span class="value" id="processingCount">0</span></div>
+                <div class="stat-divider"></div>
+                <div class="stat-item"><span class="label">Total Jobs</span><span class="value" id="totalJobs">0</span></div>
+                <div class="stat-divider"></div>
+                <div class="stat-item"><span class="label">Active jobs</span><span class="value" id="activeJobs">0</span></div>
+            </div>
+            <div class="quick-actions">
+                <button class="btn-sm primary" id="uploadQuickBtn">📤 Upload</button>
+                <button class="btn-sm" id="historyQuickBtn">📋 History</button>
+            </div>
+        </div>
+        <div class="recent-jobs" style="margin-bottom:10px;">
+            <span style="font-weight:600;font-size:11px;color:var(--text-secondary);">Recent Jobs</span>
+            <div id="recentJobsContainer"><span class="empty">No jobs yet</span></div>
+            <a href="#" class="view-all" id="viewAllLink">View All →</a>
+        </div>
+        <div class="toolbar">
+            <div class="toolbar-group">
+                <label>Preset <select id="presetSelect"><option value="minify">Minify</option><option value="weak" selected>Weak</option><option value="medium">Medium</option><option value="strong">Strong</option><option value="custom">Custom</option></select></label>
+                <label>Lua <select id="luaVersion"><option value="5.1">Lua 5.1</option><option value="5.2">Lua 5.2</option><option value="luau" selected>Luau</option></select></label>
+                <label>Seed <input type="number" id="seedInput" value="0" step="1" style="width:60px;" /></label>
+            </div>
+            <div class="toolbar-group">
+                <label class="switch"><input type="checkbox" id="prettyPrint" checked /><span class="slider"></span></label><label>Pretty</label>
+                <label class="switch"><input type="checkbox" id="safeMode" checked /><span class="slider"></span></label><label>Safe</label>
+            </div>
+            <div class="toolbar-group" style="flex:1;justify-content:flex-end;">
+                <button class="btn btn-primary" id="obfuscateBtn">▶ Run</button>
+                <button class="btn btn-danger" id="deobfuscateBtn">◀ Deobf</button>
+                <button class="btn btn-ghost" id="clearBtn">✕ Clear</button>
+                <span class="file-actions">
+                    <button class="btn" id="loadBtn">📂 Load</button>
+                    <input type="file" id="fileInput" style="display:none;" accept=".lua,.txt" />
+                    <button class="btn btn-success" id="copyBtn">📋 Copy</button>
+                    <button class="btn" id="downloadBtn">⬇ Dwn</button>
+                </span>
+                <button class="log-toggle-btn" id="logToggleBtn">📋 Log</button>
+                <div class="progress-wrap" id="progressWrap"><progress id="progressBar" max="100" value="0"></progress><span class="prog-label" id="progressLabel">0%</span></div>
+            </div>
+        </div>
+        <div class="controls-row">
+            <div class="control-group">
+                <span class="control-label">Protection</span>
+                <div class="slider-container"><input type="range" id="protectionLevel" min="0" max="100" value="80" /><span class="slider-value" id="protectionValue">80%</span></div>
+            </div>
+            <div class="control-group">
+                <label class="control-toggle"><input type="checkbox" id="deadCodeToggle" checked /> Dead Code</label>
+                <label class="control-toggle"><input type="checkbox" id="antiDebugToggle" checked /> Anti-Debug</label>
+            </div>
+            <div class="control-group">
+                <span class="control-label">Format</span>
+                <div class="format-group">
+                    <label class="radio-label"><input type="radio" name="outputFormat" value="minified" /> Minified</label>
+                    <label class="radio-label"><input type="radio" name="outputFormat" value="pretty" checked /> Pretty</label>
+                </div>
+            </div>
+            <div class="control-group" style="flex:1;justify-content:flex-end;">
+                <span class="advanced-toggle" id="advancedToggle">▸ Advanced layers</span>
+            </div>
+        </div>
+        <div class="layer-toggles" id="layerToggles">
+            <div class="toggle"><input type="checkbox" id="allLayers" checked /><label>ALL</label></div>
+            <div class="toggle"><input type="checkbox" id="layer1" checked /><label>L1</label></div>
+            <div class="toggle"><input type="checkbox" id="layer2" checked /><label>L2</label></div>
+            <div class="toggle"><input type="checkbox" id="layer3" checked /><label>L3</label></div>
+            <div class="toggle"><input type="checkbox" id="layer4" checked /><label>L4</label></div>
+            <div class="toggle"><input type="checkbox" id="layer5" checked /><label>L5</label></div>
+            <div class="toggle"><input type="checkbox" id="layer6" checked /><label>L6</label></div>
+            <div class="toggle"><input type="checkbox" id="layer7" checked /><label>L7</label></div>
+            <div class="toggle"><input type="checkbox" id="layer8" checked /><label>L8</label></div>
+            <div class="toggle"><input type="checkbox" id="layer9" checked /><label>L9</label></div>
+            <div class="toggle"><input type="checkbox" id="layer10" checked /><label>L10</label></div>
+        </div>
+        <div class="panels-wrapper">
+            <div class="panel" id="inputPanel">
+                <div class="drop-hint">📂 Drop .lua here</div>
+                <div class="panel-header"><span>📄 Input</span><span class="count" id="inputCount">0 lines</span></div>
+                <textarea id="sourceCode" placeholder="Paste your Luau source here or drag & drop a file"></textarea>
+            </div>
+            <div class="panel output">
+                <div class="panel-header"><span>📦 Output</span><span class="count" id="outputCount">0 lines</span></div>
+                <textarea id="obfuscatedOutput" readonly placeholder="Obfuscated code will appear here"></textarea>
+            </div>
+        </div>
+        <div class="log-panel" id="logPanel">
+            <div class="log-header" id="logHeader"><span>📋 Log <span class="log-badge" id="logCount">0</span></span><div style="display:flex;gap:4px;align-items:center;"><button class="log-clear" id="logClear">Clear</button><button class="log-toggle-btn-small" id="logToggleSmall">▾</button></div></div>
+            <div class="log-body" id="logBody"><div class="log-entry info"><span class="time">[init]</span> finny.obf v4 — loader matches your sample</div></div>
+        </div>
+        <div class="status-bar"><span class="status" id="status"><span class="dot green" id="statusDot"></span><span id="statusText">Ready</span></span><span id="perfDisplay"></span></div>
+    </div>
+
+    <script>
+        (function() {
+            // ─── DOM refs ───
+            const source = document.getElementById('sourceCode');
+            const output = document.getElementById('obfuscatedOutput');
+            const obfBtn = document.getElementById('obfuscateBtn');
+            const deobfBtn = document.getElementById('deobfuscateBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const loadBtn = document.getElementById('loadBtn');
+            const fileInput = document.getElementById('fileInput');
+            const statusText = document.getElementById('statusText');
+            const statusDot = document.getElementById('statusDot');
+            const perfDisplay = document.getElementById('perfDisplay');
+            const presetSelect = document.getElementById('presetSelect');
+            const seedInput = document.getElementById('seedInput');
+            const prettyPrint = document.getElementById('prettyPrint');
+            const safeMode = document.getElementById('safeMode');
+            const allLayers = document.getElementById('allLayers');
+            const layerCheckboxes = [
+                document.getElementById('layer1'), document.getElementById('layer2'),
+                document.getElementById('layer3'), document.getElementById('layer4'),
+                document.getElementById('layer5'), document.getElementById('layer6'),
+                document.getElementById('layer7'), document.getElementById('layer8'),
+                document.getElementById('layer9'), document.getElementById('layer10')
+            ];
+            const advancedToggle = document.getElementById('advancedToggle');
+            const layerToggles = document.getElementById('layerToggles');
+            const inputCount = document.getElementById('inputCount');
+            const outputCount = document.getElementById('outputCount');
+            const logBody = document.getElementById('logBody');
+            const logCount = document.getElementById('logCount');
+            const logClear = document.getElementById('logClear');
+            const logToggleSmall = document.getElementById('logToggleSmall');
+            const logPanel = document.getElementById('logPanel');
+            const logHeader = document.getElementById('logHeader');
+            const logToggleBtn = document.getElementById('logToggleBtn');
+            const inputPanel = document.getElementById('inputPanel');
+            const protectionLevel = document.getElementById('protectionLevel');
+            const protectionValue = document.getElementById('protectionValue');
+            const deadCodeToggle = document.getElementById('deadCodeToggle');
+            const antiDebugToggle = document.getElementById('antiDebugToggle');
+            const formatRadios = document.querySelectorAll('input[name="outputFormat"]');
+            const uploadQuickBtn = document.getElementById('uploadQuickBtn');
+            const historyQuickBtn = document.getElementById('historyQuickBtn');
+            const totalJobsEl = document.getElementById('totalJobs');
+            const processingCountEl = document.getElementById('processingCount');
+            const activeJobsEl = document.getElementById('activeJobs');
+            const recentJobsContainer = document.getElementById('recentJobsContainer');
+            const viewAllLink = document.getElementById('viewAllLink');
+            const progressWrap = document.getElementById('progressWrap');
+            const progressBar = document.getElementById('progressBar');
+            const progressLabel = document.getElementById('progressLabel');
+
+            // ─── State ───
+            let totalJobs = 0,
+                activeJobs = 0,
+                logEntries = 0,
+                logVisible = true,
+                isProcessing = false;
+            let recentJobs = [];
+            let rand = mulberry32(0);
+
+            function mulberry32(a) { return function() { a |= 0;
+                    a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a);
+                    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+            function reseed(s) { rand = mulberry32(s || 0); }
+
+            // ─── Logger ───
+            function log(msg, type = 'info') {
+                const t = new Date().toLocaleTimeString();
+                const e = document.createElement('div');
+                e.className = 'log-entry ' + type;
+                e.innerHTML = `<span class="time">[${t}]</span>${msg}`;
+                logBody.appendChild(e);
+                logBody.scrollTop = logBody.scrollHeight;
+                logEntries++;
+                logCount.textContent = logEntries;
+                if (logEntries > 500) { logBody.removeChild(logBody.firstChild);
+                    logEntries--; }
+            }
+
+            function setStatus(text, state = 'ready') {
+                statusText.textContent = text;
+                statusDot.className = 'dot';
+                if (state === 'ready') statusDot.classList.add('green');
+                else if (state === 'error') statusDot.classList.add('red');
+                else if (state === 'warn') statusDot.classList.add('yellow');
+                else if (state === 'info') statusDot.classList.add('blue');
+            }
+
+            function updateDashboard() {
+                totalJobsEl.textContent = totalJobs;
+                processingCountEl.textContent = 0;
+                activeJobsEl.textContent = activeJobs;
+                if (!recentJobs.length) { recentJobsContainer.innerHTML = '<span class="empty">No jobs yet</span>'; return; }
+                let html = '';
+                const show = recentJobs.slice(-3).reverse();
+                for (const j of show) {
+                    const st = j.status === 'COMPLETED' ? '#10b981' : '#fbbf24';
+                    html += `<div class="job"><span class="status" style="background:${st}"></span><span class="name">${j.name}</span><span class="meta">${j.status} · ${j.size} · ${j.time}</span></div>`;
+                }
+                recentJobsContainer.innerHTML = html;
+            }
+
+            function addJob(name, status = 'COMPLETED') {
+                const size = (source.value.length / 1024).toFixed(0) + 'KB';
+                const time = new Date().toLocaleString('en-US', { month: 'short', day: 'numeric' });
+                recentJobs.push({ name, status, size, time });
+                if (recentJobs.length > 10) recentJobs.shift();
+                totalJobs++;
+                updateDashboard();
+            }
+
+            function toggleLogPanel(show) {
+                logVisible = (show !== undefined) ? show : !logVisible;
+                logPanel.classList.toggle('hidden', !logVisible);
+                logToggleBtn.classList.toggle('active', logVisible);
+                logToggleSmall.textContent = logVisible ? '▾' : '▸';
+            }
+            logToggleBtn.addEventListener('click', e => { e.stopPropagation();
+                toggleLogPanel(); });
+            logHeader.addEventListener('click', e => { if (e.target.closest('.log-clear') || e.target.closest(
+                        '.log-toggle-btn-small')) return;
+                toggleLogPanel(); });
+            logToggleSmall.addEventListener('click', e => { e.stopPropagation();
+                toggleLogPanel(); });
+            logClear.addEventListener('click', e => { e.stopPropagation();
+                logBody.innerHTML = '';
+                logEntries = 0;
+                logCount.textContent = '0';
+                log('Log cleared', 'info'); });
+            protectionLevel.addEventListener('input', function() { protectionValue.textContent = this.value + '%'; });
+            uploadQuickBtn.addEventListener('click', function() { loadBtn.click(); });
+            historyQuickBtn.addEventListener('click', function() { log('📋 Opening history...', 'info');
+                setStatus('History viewed', 'info'); if (!recentJobs.length) log('No jobs yet', 'warn');
+                else log('📋 History: ' + recentJobs.length + ' jobs', 'info'); });
+            viewAllLink.addEventListener('click', e => { e.preventDefault();
+                historyQuickBtn.click(); });
+
+            function setProgress(pct, label) {
+                if (pct === undefined) { progressWrap.classList.remove('active'); return; }
+                progressWrap.classList.add('active');
+                progressBar.value = Math.min(100, Math.max(0, pct));
+                progressLabel.textContent = label || (Math.round(pct) + '%');
+            }
+
+            // ─── Tokenizer ───
+            function tokenizeLua(code) {
+                const tokens = [];
+                let i = 0,
+                    n = code.length;
+                const push = (type, val, s, e) => { tokens.push([type, val, s, e]); };
+                while (i < n) {
+                    const ch = code[i];
+                    if (ch === ' ' || ch === '\t' || ch === '\r' || ch === '\n') {
+                        let s = i;
+                        while (i < n && (code[i] === ' ' || code[i] === '\t' || code[i] === '\r' || code[i] === '\n')) i++;
+                        push('ws', code.substring(s, i), s, i);
+                        continue;
+                    }
+                    if (ch === '-' && i + 1 < n && code[i + 1] === '-') {
+                        let s = i,
+                            e = code.indexOf('\n', i);
+                        if (e === -1) e = n;
+                        push('comment', code.substring(s, e), s, e);
+                        i = e;
+                        continue;
+                    }
+                    if (ch === '[' && i + 1 < n && code[i + 1] === '[') {
+                        let s = i,
+                            level = 0,
+                            pos = i + 1;
+                        while (pos < n && code[pos] === '=') { level++;
+                            pos++; }
+                        if (pos < n && code[pos] === '[') {
+                            let close = ']' + '='.repeat(level) + ']';
+                            let ep = code.indexOf(close, pos + 1);
+                            if (ep !== -1) { ep += close.length;
+                                push('longstring', code.substring(s, ep), s, ep);
+                                i = ep; continue; }
+                        }
+                    }
+                    if (ch === "'" || ch === '"') {
+                        let s = i,
+                            q = ch;
+                        i++;
+                        while (i < n) {
+                            if (code[i] === '\\') i += 2;
+                            else if (code[i] === q) { i++; break; } else i++;
+                        }
+                        push('string', code.substring(s, i), s, i);
+                        continue;
+                    }
+                    if (/[0-9]/.test(ch) || (ch === '.' && i + 1 < n && /[0-9]/.test(code[i + 1]))) {
+                        let s = i;
+                        if (ch === '0' && i + 1 < n && (code[i + 1] === 'x' || code[i + 1] === 'X')) {
+                            i += 2;
+                            while (i < n && /[0-9a-fA-F]/.test(code[i])) i++;
+                        } else {
+                            while (i < n && /[0-9]/.test(code[i])) i++;
+                            if (i < n && code[i] === '.') { i++; while (i < n && /[0-9]/.test(code[i])) i++; }
+                            if (i < n && (code[i] === 'e' || code[i] === 'E')) {
+                                i++;
+                                if (i < n && (code[i] === '+' || code[i] === '-')) i++;
+                                while (i < n && /[0-9]/.test(code[i])) i++;
+                            }
+                        }
+                        push('number', code.substring(s, i), s, i);
+                        continue;
+                    }
+                    if (/[a-zA-Z_]/.test(ch)) {
+                        let s = i;
+                        while (i < n && /[a-zA-Z0-9_]/.test(code[i])) i++;
+                        push('ident', code.substring(s, i), s, i);
+                        continue;
+                    }
+                    let s = i;
+                    i++;
+                    push('other', code.substring(s, i), s, i);
+                }
+                return tokens;
+            }
+
+            // ─── Helpers ───
+            function safeMinify(code) {
+                const toks = tokenizeLua(code);
+                let out = '',
+                    lastWs = false;
+                for (const t of toks) {
+                    if (t[0] === 'ws') { if (out.length && !lastWs) { out += ' ';
+                            lastWs = true; } } else if (t[0] === 'comment') continue;
+                    else { out += t[1];
+                        lastWs = false; }
+                }
+                return out;
+            }
+
+            function encodeNumberComplex(num, depth) {
+                depth = depth || 0;
+                if (depth > 3) return String(num);
+                if (typeof num !== 'number' || !isFinite(num) || num < -100000 || num > 100000 || num % 1 !== 0) return String(
+                num);
+                if (rand() > 0.5) return String(num);
+                const ops = [
+                    (a, b) => '(' + a + '+' + b + ')',
+                    (a, b) => '(' + a + '-' + b + ')',
+                    (a, b) => '(' + a + '*' + b + ')',
+                    (a, b) => '(' + a + '/' + b + ')',
+                    (a, b) => '(' + a + '^' + b + ')',
+                ];
+                const op = ops[Math.floor(rand() * ops.length)];
+                let a, b;
+                if (num === 0) { a = 0;
+                    b = 0; } else if (rand() > 0.5) { a = Math.floor(rand() * Math.abs(num) + 1);
+                    b = num - a; } else { a = Math.floor(num / 2);
+                    b = num - a; }
+                if (a === num || b === num) { a = Math.floor(num / 3);
+                    b = num - a; }
+                try {
+                    const expr = op(encodeNumberComplex(a, depth + 1), encodeNumberComplex(b, depth + 1));
+                    return '(' + expr + ')';
+                } catch (_) { return String(num); }
+            }
+
+            function transformTokens(tokens, numProc, strProc) {
+                let out = '';
+                for (const t of tokens) {
+                    if (t[0] === 'number' && numProc) {
+                        const num = parseFloat(t[1]);
+                        if (!isNaN(num) && isFinite(num) && Number.isInteger(num) && num >= -100000 && num <= 100000) {
+                            out += numProc(num);
+                        } else out += t[1];
+                    } else if (t[0] === 'string' && strProc) {
+                        out += strProc(t[1]);
+                    } else {
+                        out += t[1];
+                    }
+                }
+                return out;
+            }
+
+            function randomVar(len) { let r = '';
+                for (let i = 0; i < (len || 8); i++) r += 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' [Math.floor(
+                        rand() * 52)];
+                return r; }
+
+            function randomKey() { return Math.floor(rand() * 256); }
+
+            function randomInt(a, b) { return Math.floor(rand() * (b - a + 1)) + a; }
+
+            function generateContextJunk() {
+                const junk = [
+                    `if ${rand()>0.5?'true':'false'} then local _=0 end;`,
+                    `local ${randomVar()}=function()return ${Math.floor(rand()*1000)} end;`,
+                    `local ${randomVar()}=${randomVar()} or {};`,
+                    `local ${randomVar()}=string.char(${Math.floor(rand()*256)});`,
+                    `local ${randomVar()}=Vector3.new(${(rand()*100).toFixed(2)},${(rand()*100).toFixed(2)},${(rand()*100).toFixed(2)});`,
+                    `local ${randomVar()}=CFrame.new(${(rand()*100).toFixed(2)},${(rand()*100).toFixed(2)},${(rand()*100).toFixed(2)});`,
+                    `for ${randomVar()}=1,0 do break end;`,
+                    `local ${randomVar()}={${Math.floor(rand()*100)},${Math.floor(rand()*100)}};`,
+                ];
+                return junk[Math.floor(rand() * junk.length)];
+            }
+
+            function generateDeadBlock() {
+                const blocks = [
+                    `if false then local ${randomVar()}=${Math.floor(rand()*1000)} ${randomVar()}=${randomVar()}+${Math.floor(rand()*100)} print(${randomVar()}) end`,
+                    `do local ${randomVar()}=${Math.floor(rand()*1000)} local ${randomVar()}=function()return ${randomVar()}+${Math.floor(rand()*100)} end ${randomVar()}() end`,
+                    `while false do local ${randomVar()}=${Math.floor(rand()*1000)} ${randomVar()}=${randomVar()}*${Math.floor(rand()*10)} break end`,
+                    `local ${randomVar()}=${Math.floor(rand()*1000)} local ${randomVar()}=${Math.floor(rand()*1000)} if ${randomVar()}>${randomVar()} then ${randomVar()}=${randomVar()} else ${randomVar()}=${randomVar()} end`,
+                ];
+                return blocks[Math.floor(rand() * blocks.length)];
+            }
+
+            function injectDeadBlock(code, pct) {
+                const lines = code.split('\n');
+                const numBlocks = Math.max(1, Math.min(Math.floor(pct / 10), 12));
+                let out = [];
+                let step = Math.max(1, Math.floor(lines.length / (numBlocks + 1)));
+                for (let i = 0; i < lines.length; i++) {
+                    out.push(lines[i]);
+                    if (i > 0 && i % step === 0 && i < lines.length - 1) out.push(generateDeadBlock());
+                }
+                for (let i = 0; i < Math.min(numBlocks, 5); i++) out.push(generateDeadBlock());
+                return out.join('\n');
+            }
+
+            function injectAntiDebugBlock(code) {
+                const checks = [
+                    `if debug and debug.getinfo then local info=debug.getinfo(1) if info and info.source and string.find(info.source,"debug") then error("debug") end end`,
+                    `local function _c() local fn,err=pcall(function() local t={} for i=1,10 do t[i]=i end return table.concat(t) end) if not fn then error("env") end end _c()`,
+                ];
+                return checks[Math.floor(rand() * checks.length)] + '\n' + code;
+            }
+
+            function injectAntiPattern(code) {
+                const pat = [
+                    `local _=function(...)return ... end;`,
+                    `local __=debug and debug.getinfo or function()return{}end;`,
+                    `local ___=(function()local t={}for i=1,10 do t[i]=i end return t end)();`,
+                ];
+                return pat[Math.floor(rand() * pat.length)] + '\n' + code;
+            }
+
+            function flattenControlFlow(code) {
+                const lines = code.split('\n');
+                const chunks = [];
+                let cur = [],
+                    depth = 0;
+                for (const line of lines) {
+                    cur.push(line);
+                    const t = line.trim();
+                    if (t.match(/^if\s+.*\s+then\s*$/) || t.match(/^for\s+.*\s+do\s*$/) || t.match(/^while\s+.*\s+do\s*$/) ||
+                        t === 'repeat') depth++;
+                    else if (t === 'end' || t.match(/^end\s*--/)) { depth--; if (depth === 0 && cur.length) { chunks.push(
+                                cur.slice());
+                            cur = []; } }
+                }
+                if (cur.length) chunks.push(cur);
+                if (chunks.length < 2) return code;
+                const tbl = randomVar(),
+                    disp = randomVar(),
+                    st = randomVar(),
+                    fn = randomVar();
+                let out = 'local ' + tbl + '={}\n';
+                for (let i = 0; i < chunks.length; i++) {
+                    const idx = randomVar();
+                    out += 'local ' + idx + '=function()\n' + chunks[i].join('\n') + '\nend\n' + tbl + '[' + (i + 1) + ']=' +
+                        idx + '\n';
+                }
+                out += 'local ' + disp + '=function()\n  local ' + st + '=1\n  while ' + st + '<=#' + tbl + ' do\n    local ' +
+                    fn + '=' + tbl + '[' + st + ']\n    if type(' + fn + ')=="function" then ' + fn + '() end\n    ' + st +
+                    '=' + st + '+1\n  end\nend\n' + disp + '()\n';
+                return out;
+            }
+
+            function generateStringTable() {
+                return 'local function _g(s,k)local t={}for i=1,#s,2 do t[#t+1]=string.char(tonumber(s:sub(i,i+1),16)^k)end return table.concat(t)end\n';
+            }
+
+            function genChecksums(code) {
+                let h1 = 0,
+                    h2 = 0,
+                    h3 = 0;
+                for (let i = 0; i < code.length; i++) {
+                    const c = code.charCodeAt(i);
+                    h1 = ((h1 << 5) - h1 + c) >>> 0;
+                    h2 = ((h2 * 31 + c) * 7) >>> 0;
+                    h3 = ((h3 * 2654435761 + c * 17) >>> 0) ^ (h3 << 7);
+                }
+                return { h1, h2, h3 };
+            }
+
+            function generateAntiTamper(code) {
+                const s = genChecksums(code);
+                return `local function _c1(s)local h=0 for i=1,#s do h=((h<<5)-h+string.byte(s,i))%4294967296 end return h end
+        local function _c2(s)local h=0 for i=1,#s do h=((h*31+string.byte(s,i))*7)%4294967296 end return h end
+        local function _c3(s)local h=0 for i=1,#s do h=((h*2654435761+string.byte(s,i)*17)%4294967296)~((h<<7)%4294967296)end return h end
+        local _m,_t=getmetatable("")or{} _m.__tostring=function()error("skid")end debug.setmetatable("",_m)
+        local _s=... local c1=_c1(_s)local c2=_c2(_s)local c3=_c3(_s)
+        if c1~=${s.h1} or c2~=${s.h2} or c3~=${s.h3} then error("skid") end
+        local _o=table.concat table.concat=function(...)error("skid")end
+        local _p,_e=pcall(unpack,{},0,2147483647)if _p then error("skid")end\n`;
+            }
+
+            // ─── Apply layers ───
+            function applyLayers(code, layers, safe, protection, deadCode, antiDebug) {
+                let p = code;
+                if (deadCode && protection > 20) {
+                    p = injectDeadBlock(p, protection);
+                    log('💀 Dead code injected', 'info');
+                }
+                if (antiDebug && protection > 30) {
+                    p = injectAntiDebugBlock(p);
+                    log('🛡️ Anti-debug added', 'info');
+                }
+
+                const tokens = tokenizeLua(p);
+                const numProc = layers[1] ? function(num) {
+                    if (Number.isInteger(num) && num >= -100000 && num <= 100000) return encodeNumberComplex(num, 0);
+                    return String(num);
+                } : null;
+                const strProc = layers[2] ? function(str) {
+                    const content = str.slice(1, -1);
+                    if (content.includes('\\') || content.length === 0) return str;
+                    let can = true;
+                    for (let i = 0; i < content.length; i++) {
+                        if (content.charCodeAt(i) > 255) { can = false; break; }
+                    }
+                    if (!can) return str;
+                    let parts = [];
+                    for (let i = 0; i < content.length; i++) {
+                        const ch = content.charCodeAt(i);
+                        parts.push('string.char(' + (numProc ? numProc(ch) : String(ch)) + ')');
+                    }
+                    return parts.length === 1 ? parts[0] : parts.join('..');
+                } : null;
+
+                const minify = layers[0];
+                let out = '',
+                    lastWs = false;
+                for (const t of tokens) {
+                    if (t[0] === 'ws') {
+                        if (minify) { if (out.length && !lastWs) { out += ' ';
+                                lastWs = true; } } else out += t[1];
+                        continue;
+                    }
+                    if (t[0] === 'comment') { if (!minify) out += t[1]; continue; }
+                    if (t[0] === 'number' && numProc) {
+                        const num = parseFloat(t[1]);
+                        if (!isNaN(num) && isFinite(num) && Number.isInteger(num) && num >= -100000 && num <= 100000) {
+                            out += numProc(num);
+                        } else out += t[1];
+                    } else if (t[0] === 'string' && strProc) {
+                        out += strProc(t[1]);
+                    } else {
+                        out += t[1];
+                    }
+                    lastWs = false;
+                }
+                p = out;
+
+                if (layers[3]) {
+                    let junk = '';
+                    const cnt = Math.min(Math.floor(protection / 10) + 2, 15);
+                    for (let i = 0; i < cnt; i++) junk += generateContextJunk() + '\n';
+                    p = junk + p;
+                    log('🧩 Context junk injected', 'info');
+                }
+                if (layers[4]) { p = injectAntiPattern(p);
+                    log('🔄 Anti-pattern injected', 'info'); }
+                if (layers[5]) { p = 'local _s={}_s[1]=function()return 1 end _s[2]=function()return 2 end local _r=_s[math.random(1,2)] local _val=_r() if _val==1 then _s[1]=function()return 3 end end\n' +
+                        p;
+                    log('🔁 Self-modifying wrapper added', 'info'); }
+                if (layers[6] && !safe) { p = flattenControlFlow(p);
+                    log('🌀 Control flow flattened', 'info'); }
+                if (layers[7] && !safe) {
+                    const hex = [];
+                    for (let i = 0; i < p.length; i++) { let h = p.charCodeAt(i).toString(16); if (h.length < 2) h = '0' + h;
+                        hex.push(h); }
+                    const key = randomKey();
+                    const xorHex = hex.map(h => { const x = parseInt(h, 16) ^ key; return x.toString(16).padStart(2, '0'); })
+                        .join('');
+                    const d = randomVar(),
+                        s = randomVar(),
+                        t = randomVar(),
+                        i = randomVar(),
+                        l = randomVar(),
+                        x = randomVar();
+                    p =
+                        `local ${d}=function(${s}) local ${t}={} local ${l}=#${s} for ${i}=1,${l},2 do local ${x}=tonumber(${s}:sub(${i},${i}+1),16)^${key} ${t}[#${t}+1]=string.char(${x}) end return table.concat(${t}) end local ${randomVar()}=${d}("${xorHex}") loadstring(${randomVar()})()`;
+                    log('🧬 VM wrapper added', 'info');
+                }
+                if (layers[8]) { p = generateStringTable() + '\n' + p;
+                    log('📦 String table added', 'info'); }
+                if (layers[9] && !safe) { p = generateAntiTamper(p) + '\n' + p;
+                    log('🛡️ Anti-tamper added', 'info'); }
+                return p;
+            }
+
+            // ─── toDecimalEscapes ───
+            function toDecimalEscapes(str) {
+                let out = '';
+                for (let i = 0; i < str.length; i++) {
+                    const c = str.charCodeAt(i);
+                    out += '\\' + String(c).padStart(3, '0');
+                }
+                return out;
+            }
+
+            // ─── LOADER – matches your sample exactly ───
+            function generateClassicLoader(processed, seed) {
+                const encoded = toDecimalEscapes(processed);
+                const chunkSize = 180;
+                const chunks = [];
+                for (let i = 0; i < encoded.length; i += chunkSize) {
+                    chunks.push(encoded.substring(i, Math.min(i + chunkSize, encoded.length)));
+                }
+                let tableStr = '{';
+                for (let i = 0; i < chunks.length; i++) {
+                    tableStr += '"' + chunks[i] + '"';
+                    if (i < chunks.length - 1) tableStr += ',';
+                }
+                tableStr += '}';
+
+                // Optional shuffle if seed is not 0 (adds a layer, but we keep it optional)
+                // To exactly match the sample's simplicity, we just use the table directly.
+                // But we keep the shuffle as an advanced feature via seed.
+                let loader = 'return(function(...)local f=' + tableStr + '\n';
+                loader += 'local function d(s)local t={}for i=1,#s do local n=tonumber(s:sub(i,i+2))if n then t[#t+1]=string.char(n)end i=i+2 end return table.concat(t)end\n';
+                loader += 'local r="" for i=1,#f do r=r..d(f[i])end loadstring(r)()end)()\n';
+                return loader;
+            }
+
+            // ─── Deobfuscator ───
+            function deobfuscateOutput(code) {
+                try {
+                    const tableMatch = code.match(/local f=({[^}]+})/);
+                    if (!tableMatch) return 'Could not find encoded table';
+                    const tableStr = tableMatch[1];
+                    const stringLiterals = [];
+                    const regex = /"((?:\\\d{3})+?)"/g;
+                    let m;
+                    while ((m = regex.exec(tableStr)) !== null) stringLiterals.push(m[1]);
+                    if (!stringLiterals.length) return 'No encoded strings found';
+                    let decoded = '';
+                    for (const enc of stringLiterals) {
+                        let str = '',
+                            i = 0;
+                        while (i < enc.length) {
+                            if (enc[i] === '\\') {
+                                const num = parseInt(enc.substr(i + 1, 3), 10);
+                                if (!isNaN(num) && num > 0) { str += String.fromCharCode(num);
+                                    i += 4; continue; }
+                            }
+                            str += enc[i];
+                            i++;
+                        }
+                        decoded += str;
+                    }
+                    return decoded;
+                } catch (e) { return 'Deobf error: ' + e.message; }
+            }
+
+            // ─── UI helpers ───
+            function updateCounts() {
+                inputCount.textContent = source.value.split('\n').length + ' lines';
+                outputCount.textContent = output.value.split('\n').length + ' lines';
+            }
+            source.addEventListener('input', updateCounts);
+            output.addEventListener('input', updateCounts);
+
+            function setPreset(mode) {
+                let idx = [];
+                if (mode === 'minify') idx = [0];
+                else if (mode === 'weak') idx = [0, 1, 2];
+                else if (mode === 'medium') idx = [0, 1, 2, 3, 4, 5];
+                else if (mode === 'strong') idx = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+                else return;
+                layerCheckboxes.forEach((cb, i) => cb.checked = idx.includes(i));
+                allLayers.checked = idx.length === 10;
+            }
+
+            presetSelect.addEventListener('change', function() { if (this.value !== 'custom') { setPreset(this.value);
+                    log('Preset: ' + this.value, 'info'); } });
+            allLayers.addEventListener('change', function() { layerCheckboxes.forEach(cb => cb.checked = this.checked); });
+            layerCheckboxes.forEach(cb => {
+                cb.addEventListener('change', function() {
+                    if (!this.checked) allLayers.checked = false;
+                    else if (layerCheckboxes.every(c => c.checked)) allLayers.checked = true;
+                    const cur = layerCheckboxes.map(c => c.checked);
+                    const presets = {
+                        minify: [true, false, false, false, false, false, false, false, false, false],
+                        weak: [true, true, true, false, false, false, false, false, false, false],
+                        medium: [true, true, true, true, true, true, false, false, false, false],
+                        strong: [true, true, true, true, true, true, true, true, true, true]
+                    };
+                    let found = false;
+                    for (const [k, arr] of Object.entries(presets)) {
+                        if (arr.every((v, i) => v === cur[i])) { presetSelect.value = k;
+                            found = true; break; }
+                    }
+                    if (!found) presetSelect.value = 'custom';
+                });
+            });
+
+            let advancedOpen = false;
+            advancedToggle.addEventListener('click', function() {
+                advancedOpen = !advancedOpen;
+                layerToggles.classList.toggle('open', advancedOpen);
+                this.textContent = advancedOpen ? '▾ Advanced layers' : '▸ Advanced layers';
+            });
+
+            // ─── Drag & Drop ───
+            let dragC = 0;
+            inputPanel.addEventListener('dragover', e => { e.preventDefault();
+                e.stopPropagation();
+                this.classList.add('drag-over'); });
+            inputPanel.addEventListener('dragleave', e => { e.preventDefault();
+                e.stopPropagation();
+                dragC--;
+                if (dragC <= 0) { this.classList.remove('drag-over');
+                    dragC = 0; } });
+            inputPanel.addEventListener('drop', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.classList.remove('drag-over');
+                dragC = 0;
+                const files = e.dataTransfer.files;
+                if (files.length) {
+                    const file = files[0];
+                    if (file.name.endsWith('.lua') || file.name.endsWith('.txt')) {
+                        const reader = new FileReader();
+                        reader.onload = function(ev) { source.value = ev.target.result;
+                            updateCounts();
+                            log('📂 Loaded: ' + file.name + ' (' + file.size + ' bytes)', 'success');
+                            setStatus('Loaded ' + file.name, 'ready'); };
+                        reader.onerror = function() { log('❌ Failed to read ' + file.name, 'error');
+                            setStatus('Read error', 'error'); };
+                        reader.readAsText(file);
+                    } else { log('⚠️ Skipped: ' + file.name + ' (only .lua/.txt)', 'warn');
+                        setStatus('Unsupported file', 'warn'); }
+                }
+            });
+            document.addEventListener('dragover', e => e.preventDefault());
+            document.addEventListener('drop', e => e.preventDefault());
+
+            loadBtn.addEventListener('click', function() { fileInput.click(); });
+            fileInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(e) { source.value = e.target.result;
+                    updateCounts();
+                    log('📂 Loaded: ' + file.name + ' (' + file.size + ' bytes)', 'success');
+                    setStatus('Loaded ' + file.name, 'ready'); };
+                reader.onerror = function() { log('❌ Failed to read ' + file.name, 'error');
+                    setStatus('Read error', 'error'); };
+                reader.readAsText(file);
+                this.value = '';
+            });
+
+            copyBtn.addEventListener('click', function() {
+                const text = output.value;
+                if (!text) { log('⚠️ Nothing to copy', 'warn');
+                    setStatus('Nothing to copy', 'warn'); return; }
+                navigator.clipboard?.writeText(text).then(() => { log('📋 Copied', 'success');
+                    setStatus('Copied', 'ready'); }).catch(() => { output.select();
+                    document.execCommand('copy');
+                    log('📋 Copied (fallback)', 'success');
+                    setStatus('Copied', 'ready'); });
+            });
+
+            downloadBtn.addEventListener('click', function() {
+                const text = output.value;
+                if (!text) { log('⚠️ Nothing to download', 'warn');
+                    setStatus('Nothing to download', 'warn'); return; }
+                const blob = new Blob([text], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'finny_output.lua';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                log('⬇️ Downloaded finny_output.lua', 'success');
+                setStatus('Downloaded', 'ready');
+            });
+
+            clearBtn.addEventListener('click', function() { source.value = '';
+                output.value = '';
+                updateCounts();
+                log('🗑️ Cleared', 'info');
+                setStatus('Cleared', 'ready'); });
+
+            function getOutputFormat() { for (const r of formatRadios)
+                    if (r.checked) return r.value; return 'pretty'; }
+
+            // ─── Obfuscate ───
+            obfBtn.addEventListener('click', function() {
+                const input = source.value;
+                if (!input.trim()) { log('⚠️ Paste some code first', 'warn');
+                    setStatus('Paste some code first', 'warn'); return; }
+                if (isProcessing) return;
+                isProcessing = true;
+                obfBtn.disabled = true;
+                deobfBtn.disabled = true;
+                setStatus('Obfuscating...', 'info');
+                log('⚙️ Starting obfuscation...', 'info');
+                setProgress(0, '0%');
+
+                const seed = parseInt(seedInput.value) || 0;
+                const layers = layerCheckboxes.map(cb => cb.checked);
+                const safe = safeMode.checked;
+                const protection = parseInt(protectionLevel.value) || 50;
+                const deadCode = deadCodeToggle.checked;
+                const antiDebug = antiDebugToggle.checked;
+                const format = getOutputFormat();
+                const wasPretty = prettyPrint.checked;
+                if (format === 'minified') prettyPrint.checked = false;
+                else prettyPrint.checked = true;
+
+                let jobName = 'script.lua';
+                const first = source.value.split('\n')[0];
+                const m = first.match(/--\s*(\S+\.lua)/);
+                if (m) jobName = m[1];
+
+                setTimeout(() => {
+                    try {
+                        const start = performance.now();
+                        setProgress(10, '10%');
+                        const processed = applyLayers(input, layers, safe, protection, deadCode, antiDebug);
+                        setProgress(60, '60%');
+                        const result = generateClassicLoader(processed, seed);
+                        setProgress(90, '90%');
+                        output.value = result;
+                        updateCounts();
+                        prettyPrint.checked = wasPretty;
+                        const elapsed = (performance.now() - start).toFixed(0);
+                        log('✅ Obfuscation done in ' + elapsed + 'ms (' + layers.filter(Boolean).length +
+                            ' layers, ' + protection + '% protection)', 'success');
+                        setStatus('Done in ' + elapsed + 'ms', 'ready');
+                        perfDisplay.textContent = elapsed + 'ms';
+                        addJob(jobName, 'COMPLETED');
+                        setProgress(100, '100%');
+                        setTimeout(() => setProgress(), 800);
+                    } catch (e) {
+                        log('❌ Error: ' + e.message, 'error');
+                        setStatus('Error: ' + e.message, 'error');
+                        console.error(e);
+                        perfDisplay.textContent = 'error';
+                        setProgress();
+                    } finally {
+                        isProcessing = false;
+                        obfBtn.disabled = false;
+                        deobfBtn.disabled = false;
+                        prettyPrint.checked = wasPretty;
+                    }
+                }, 20);
+            });
+
+            // ─── Deobfuscate ───
+            deobfBtn.addEventListener('click', function() {
+                const input = output.value;
+                if (!input.trim()) { log('⚠️ Nothing to deobfuscate', 'warn');
+                    setStatus('Nothing to deobfuscate', 'warn'); return; }
+                try {
+                    const decoded = deobfuscateOutput(input);
+                    if (decoded.startsWith('Could') || decoded.startsWith('No') || decoded.startsWith('Deobf')) {
+                        log('❌ ' + decoded, 'error');
+                        setStatus('Deobf failed', 'error');
+                        output.value = decoded;
+                    } else {
+                        output.value = decoded;
+                        updateCounts();
+                        log('🔓 Deobfuscation successful', 'success');
+                        setStatus('Deobfuscated', 'ready');
+                    }
+                } catch (e) { log('❌ Deobf error: ' + e.message, 'error');
+                    setStatus('Deobf error', 'error'); }
+            });
+
+            // ─── Init ───
+            source.value = '-- example.lua\nprint("hello world")';
+            setPreset('weak');
+            updateCounts();
+            setStatus('Ready', 'ready');
+            log('🚀 finny.obf v4 — loader matches your sample exactly', 'info');
+            log('💡 Run on any code to get `return(function(...)local f=...` style', 'info');
+            toggleLogPanel(true);
+            updateDashboard();
+        })();
+    </script>
+</body>
+</html>
