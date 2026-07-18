@@ -3,375 +3,236 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>finny.obf – v4 (loader match)</title>
+    <title>finny.obf v5</title>
     <style>
-        /* ── same crisp styles as before, compact ── */
-        :root {
-            --bg-body: #f1f5f9;
-            --bg-app: #ffffff;
-            --bg-surface: #f8fafc;
-            --bg-elevated: #f1f5f9;
-            --bg-input: #ffffff;
-            --bg-panel: #ffffff;
-            --bg-log: #ffffff;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-muted: #94a3b8;
-            --text-log: #1e293b;
-            --border-color: #e2e8f0;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.10);
-            --radius-sm: 6px;
-            --radius-md: 10px;
-            --radius-lg: 16px;
-            --radius-full: 9999px;
-            --accent-1: #3b82f6;
-            --accent-2: #8b5cf6;
-            --accent-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            --transition: 0.2s ease;
-            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-        }
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        :root {
+            --bg: #f1f5f9;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent2: #8b5cf6;
+            --gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --radius: 10px;
+        }
         body {
-            min-height: 100vh;
-            background: var(--bg-body);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
             padding: 16px;
-            color: var(--text-primary);
+            color: var(--text);
         }
         .app {
-            width: 100%;
             max-width: 1480px;
+            width: 100%;
             height: 98vh;
             max-height: 1080px;
-            background: var(--bg-app);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
             padding: 16px 20px 12px;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border);
             overflow: hidden;
         }
         ::-webkit-scrollbar {
             width: 5px;
             height: 5px;
         }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
         ::-webkit-scrollbar-thumb {
             background: #cbd5e1;
-            border-radius: var(--radius-full);
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            border-radius: 999px;
         }
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
             flex-shrink: 0;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
+            margin-bottom: 12px;
         }
         .header h1 {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 700;
-            background: var(--accent-gradient);
+            background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.3px;
-        }
-        .header .links {
-            display: flex;
-            gap: 14px;
-            font-size: 12px;
-            color: var(--text-secondary);
-            align-items: center;
-        }
-        .header .links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            border-bottom: 1px dotted transparent;
-            transition: 0.2s;
-        }
-        .header .links a:hover {
-            color: var(--text-primary);
-            border-color: var(--text-secondary);
         }
         .header .badge {
-            background: var(--accent-gradient);
+            background: var(--gradient);
             color: #fff;
             font-size: 10px;
             font-weight: 600;
-            padding: 2px 10px;
-            border-radius: var(--radius-full);
-            letter-spacing: 0.3px;
+            padding: 2px 12px;
+            border-radius: 999px;
+            margin-left: 10px;
             -webkit-text-fill-color: #fff;
         }
-        .header .user-avatar {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: var(--accent-gradient);
+        .header .links {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-weight: 700;
+            gap: 16px;
             font-size: 12px;
-            text-transform: uppercase;
+            color: var(--muted);
+            align-items: center;
+        }
+        .header .links a {
+            color: var(--muted);
+            text-decoration: none;
+            border-bottom: 1px dotted transparent;
+        }
+        .header .links a:hover {
+            color: var(--text);
+            border-color: var(--text);
         }
         .dashboard {
             display: flex;
             flex-wrap: wrap;
             gap: 12px 20px;
-            background: var(--bg-surface);
+            background: #f8fafc;
             padding: 10px 16px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
             margin-bottom: 12px;
             flex-shrink: 0;
             align-items: center;
         }
         .stat-group {
             display: flex;
-            align-items: center;
-            gap: 12px 24px;
+            gap: 20px;
             flex-wrap: wrap;
             flex: 1;
-        }
-        .stat-item {
-            display: flex;
-            flex-direction: column;
         }
         .stat-item .label {
             font-size: 10px;
             text-transform: uppercase;
-            color: var(--text-muted);
+            color: var(--muted);
             font-weight: 600;
-            letter-spacing: 0.4px;
         }
         .stat-item .value {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
-            color: var(--text-primary);
             line-height: 1.2;
-        }
-        .stat-item .value .sub {
-            font-size: 12px;
-            font-weight: 400;
-            color: var(--text-secondary);
-            margin-left: 4px;
-        }
-        .stat-divider {
-            width: 1px;
-            height: 32px;
-            background: var(--border-color);
         }
         .quick-actions {
             display: flex;
             gap: 8px;
-            align-items: center;
-            margin-left: auto;
         }
-        .quick-actions .btn-sm {
+        .quick-actions button {
             font-size: 11px;
-            padding: 4px 12px;
-            height: 28px;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-full);
+            padding: 4px 14px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: #fff;
             cursor: pointer;
-            color: var(--text-secondary);
             transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-weight: 500;
         }
-        .quick-actions .btn-sm:hover {
-            background: var(--bg-input);
-            color: var(--text-primary);
-            border-color: var(--text-muted);
-        }
-        .quick-actions .btn-sm.primary {
-            background: var(--accent-gradient);
+        .quick-actions button.primary {
+            background: var(--gradient);
             color: #fff;
             border-color: transparent;
         }
-        .quick-actions .btn-sm.primary:hover {
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        .quick-actions button:hover {
+            background: #e2e8f0;
         }
         .recent-jobs {
             display: flex;
             align-items: center;
             gap: 12px;
-            flex-wrap: wrap;
-            margin-left: 8px;
             font-size: 12px;
-            color: var(--text-secondary);
+            color: var(--muted);
             margin-bottom: 10px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
         }
         .recent-jobs .job {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 2px 12px 2px 6px;
             display: flex;
             align-items: center;
             gap: 6px;
-            background: var(--bg-input);
-            padding: 2px 10px 2px 6px;
-            border-radius: var(--radius-full);
-            border: 1px solid var(--border-color);
         }
-        .recent-jobs .job .status {
+        .recent-jobs .job .dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
             background: #10b981;
-            flex-shrink: 0;
-        }
-        .recent-jobs .job .name {
-            font-weight: 500;
-            max-width: 120px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .recent-jobs .job .meta {
-            color: var(--text-muted);
-            font-size: 10px;
-        }
-        .recent-jobs .view-all {
-            color: var(--accent-1);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 12px;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-        .recent-jobs .view-all:hover {
-            text-decoration: underline;
-        }
-        .recent-jobs .empty {
-            color: var(--text-muted);
-            font-style: italic;
-            font-size: 12px;
         }
         .toolbar {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px 12px;
-            align-items: center;
-            background: var(--bg-surface);
+            gap: 6px 14px;
+            background: #f8fafc;
             padding: 6px 14px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
             margin-bottom: 10px;
             flex-shrink: 0;
+            align-items: center;
         }
         .toolbar-group {
             display: flex;
             align-items: center;
-            gap: 4px 10px;
+            gap: 6px 12px;
             flex-wrap: wrap;
         }
         .toolbar-group:not(:last-child)::after {
             content: '';
             width: 1px;
             height: 24px;
-            background: var(--border-color);
+            background: var(--border);
             margin-left: 4px;
-            flex-shrink: 0;
         }
         .toolbar label {
             font-size: 11px;
-            color: var(--text-secondary);
+            color: var(--muted);
             display: flex;
             align-items: center;
             gap: 4px;
-            font-weight: 500;
         }
         .toolbar select,
         .toolbar input[type="number"] {
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
+            background: #fff;
+            border: 1px solid var(--border);
             padding: 3px 8px;
-            border-radius: var(--radius-sm);
+            border-radius: 6px;
             font-size: 11px;
-            font-family: inherit;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            min-width: 56px;
             height: 26px;
         }
-        .toolbar select:focus,
-        .toolbar input:focus {
-            border-color: var(--accent-1);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
-        }
-        .toolbar .log-toggle-btn {
-            background: none;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-full);
-            padding: 2px 12px;
-            font-size: 11px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            transition: 0.2s;
-            height: 26px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .toolbar .log-toggle-btn:hover {
-            background: var(--bg-elevated);
-            color: var(--text-primary);
-        }
-        .toolbar .log-toggle-btn.active {
-            background: var(--accent-gradient);
-            color: #fff;
-            border-color: transparent;
-        }
-        .switch {
+        .toolbar .switch {
             position: relative;
-            display: inline-block;
             width: 30px;
             height: 18px;
-            flex-shrink: 0;
+            display: inline-block;
         }
-        .switch input {
+        .toolbar .switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
-        .slider {
+        .toolbar .slider {
             position: absolute;
-            cursor: pointer;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
             background: #cbd5e1;
+            border-radius: 999px;
             transition: 0.25s;
-            border-radius: var(--radius-full);
+            cursor: pointer;
         }
-        .slider::before {
+        .toolbar .slider::before {
             content: '';
             position: absolute;
             height: 12px;
@@ -379,103 +240,73 @@
             left: 3px;
             bottom: 3px;
             background: white;
-            transition: 0.25s;
             border-radius: 50%;
+            transition: 0.25s;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
         }
-        .switch input:checked+.slider {
-            background: var(--accent-gradient);
+        .toolbar .switch input:checked+.slider {
+            background: var(--gradient);
         }
-        .switch input:checked+.slider::before {
+        .toolbar .switch input:checked+.slider::before {
             transform: translateX(12px);
         }
         .btn {
             padding: 4px 14px;
             border: none;
-            border-radius: var(--radius-full);
+            border-radius: 999px;
             font-weight: 600;
             font-size: 11px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            background: var(--bg-elevated);
-            color: var(--text-secondary);
-            font-family: 'Inter', sans-serif;
-            white-space: nowrap;
+            background: #e2e8f0;
+            color: var(--text);
+            transition: 0.2s;
             height: 28px;
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            box-shadow: var(--shadow-sm);
         }
         .btn:hover {
-            background: #e2e8f0;
-            color: var(--text-primary);
+            background: #cbd5e1;
             transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
-        }
-        .btn:active {
-            transform: translateY(0);
         }
         .btn-primary {
-            background: var(--accent-gradient);
+            background: var(--gradient);
             color: #fff;
-            box-shadow: 0 3px 10px rgba(59, 130, 246, 0.25);
         }
         .btn-primary:hover {
-            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
-            color: #fff;
-            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
         .btn-success {
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: #10b981;
             color: #fff;
-        }
-        .btn-success:hover {
-            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
-            color: #fff;
-            transform: translateY(-1px);
         }
         .btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
+            background: #ef4444;
             color: #fff;
-        }
-        .btn-danger:hover {
-            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
-            color: #fff;
-            transform: translateY(-1px);
         }
         .btn-ghost {
             background: transparent;
-            color: var(--text-secondary);
-            box-shadow: none;
+            color: var(--muted);
         }
         .btn-ghost:hover {
-            background: var(--bg-elevated);
-            color: var(--text-primary);
-            transform: none;
+            background: #f1f5f9;
         }
         .btn:disabled {
             opacity: 0.4;
             cursor: not-allowed;
             transform: none !important;
-            box-shadow: none !important;
-        }
-        .file-actions .btn {
-            font-size: 10px;
-            padding: 2px 10px;
-            height: 24px;
         }
         .controls-row {
             display: flex;
             flex-wrap: wrap;
             gap: 8px 16px;
-            align-items: center;
-            background: var(--bg-surface);
+            background: #f8fafc;
             padding: 6px 14px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
             margin-bottom: 10px;
             flex-shrink: 0;
+            align-items: center;
         }
         .control-group {
             display: flex;
@@ -487,31 +318,29 @@
             content: '';
             width: 1px;
             height: 24px;
-            background: var(--border-color);
+            background: var(--border);
             margin-left: 4px;
-            flex-shrink: 0;
         }
         .control-label {
             font-size: 10px;
             font-weight: 600;
-            color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            color: var(--muted);
         }
         .control-toggle {
             display: flex;
             align-items: center;
             gap: 5px;
             font-size: 11px;
-            color: var(--text-secondary);
+            color: var(--text);
             cursor: pointer;
         }
         .control-toggle input[type="checkbox"] {
             appearance: none;
             width: 14px;
             height: 14px;
-            background: var(--bg-input);
-            border: 1.5px solid var(--text-muted);
+            background: #fff;
+            border: 1.5px solid var(--muted);
             border-radius: 3px;
             cursor: pointer;
             position: relative;
@@ -519,8 +348,8 @@
             flex-shrink: 0;
         }
         .control-toggle input:checked {
-            background: var(--accent-1);
-            border-color: var(--accent-1);
+            background: var(--accent);
+            border-color: var(--accent);
         }
         .control-toggle input:checked::after {
             content: '';
@@ -540,52 +369,35 @@
         }
         .slider-container input[type="range"] {
             -webkit-appearance: none;
-            appearance: none;
             width: 120px;
             height: 4px;
             border-radius: 2px;
-            background: var(--border-color);
+            background: var(--border);
             outline: none;
-            transition: background 0.2s;
         }
         .slider-container input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            appearance: none;
             width: 14px;
             height: 14px;
             border-radius: 50%;
-            background: var(--accent-gradient);
+            background: var(--gradient);
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
-            transition: transform 0.2s;
-        }
-        .slider-container input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
-        }
-        .slider-container input[type="range"]::-moz-range-thumb {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: var(--accent-gradient);
-            cursor: pointer;
-            border: none;
             box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
         }
         .slider-value {
             font-size: 13px;
             font-weight: 700;
-            color: var(--accent-1);
+            color: var(--accent);
             min-width: 36px;
             text-align: center;
         }
         .format-group {
             display: flex;
-            align-items: center;
             gap: 6px;
         }
-        .format-group .radio-label {
+        .format-group label {
             font-size: 11px;
-            color: var(--text-secondary);
+            color: var(--text);
             display: flex;
             align-items: center;
             gap: 4px;
@@ -595,17 +407,16 @@
             appearance: none;
             width: 13px;
             height: 13px;
-            border: 2px solid var(--text-muted);
+            border: 2px solid var(--muted);
             border-radius: 50%;
             cursor: pointer;
             position: relative;
             transition: 0.2s;
-            flex-shrink: 0;
         }
-        .format-group input[type="radio"]:checked {
-            border-color: var(--accent-1);
+        .format-group input:checked {
+            border-color: var(--accent);
         }
-        .format-group input[type="radio"]:checked::after {
+        .format-group input:checked::after {
             content: '';
             position: absolute;
             top: 1.5px;
@@ -613,36 +424,31 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: var(--accent-gradient);
+            background: var(--gradient);
         }
         .advanced-toggle {
-            cursor: pointer;
             font-size: 11px;
-            color: var(--text-secondary);
-            user-select: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
+            color: var(--muted);
+            cursor: pointer;
             padding: 2px 10px;
-            border-radius: var(--radius-full);
-            background: var(--bg-surface);
-            transition: background 0.2s, color 0.2s;
+            border-radius: 999px;
+            background: transparent;
             border: 1px solid transparent;
+            transition: 0.2s;
         }
         .advanced-toggle:hover {
-            background: var(--bg-elevated);
-            color: var(--text-primary);
-            border-color: var(--border-color);
+            background: #f1f5f9;
+            border-color: var(--border);
         }
         .layer-toggles {
             display: none;
             flex-wrap: wrap;
             gap: 4px 10px;
-            margin-top: 6px;
             padding: 6px 12px;
-            background: var(--bg-surface);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-color);
+            background: #f8fafc;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            margin-top: 6px;
         }
         .layer-toggles.open {
             display: flex;
@@ -652,24 +458,22 @@
             align-items: center;
             gap: 4px;
             font-size: 11px;
-            color: var(--text-secondary);
-            font-weight: 500;
+            color: var(--text);
         }
         .layer-toggles .toggle input[type="checkbox"] {
             appearance: none;
             width: 14px;
             height: 14px;
-            background: var(--bg-input);
-            border: 1.5px solid var(--text-muted);
+            background: #fff;
+            border: 1.5px solid var(--muted);
             border-radius: 3px;
             cursor: pointer;
             position: relative;
             transition: 0.2s;
-            flex-shrink: 0;
         }
         .layer-toggles .toggle input:checked {
-            background: var(--accent-1);
-            border-color: var(--accent-1);
+            background: var(--accent);
+            border-color: var(--accent);
         }
         .layer-toggles .toggle input:checked::after {
             content: '';
@@ -692,80 +496,67 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: var(--bg-panel);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-color);
+            background: #fff;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
             overflow: hidden;
-            min-width: 0;
-            box-shadow: var(--shadow-sm);
-            transition: box-shadow var(--transition);
             position: relative;
-        }
-        .panel:hover {
-            box-shadow: var(--shadow-md);
         }
         .panel-header {
             padding: 6px 14px;
-            background: var(--bg-surface);
-            border-bottom: 1px solid var(--border-color);
+            background: #f8fafc;
+            border-bottom: 1px solid var(--border);
             font-size: 10px;
-            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--muted);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-shrink: 0;
-            font-weight: 600;
-            letter-spacing: 0.4px;
-            text-transform: uppercase;
         }
         .panel-header .count {
-            font-size: 10px;
-            color: var(--text-muted);
             font-weight: 400;
-            background: var(--bg-input);
+            background: #fff;
             padding: 1px 8px;
-            border-radius: var(--radius-full);
-            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            border: 1px solid var(--border);
         }
         .panel textarea {
             flex: 1;
             width: 100%;
-            background: transparent;
             border: none;
-            color: var(--text-primary);
-            font-family: var(--font-mono);
+            padding: 10px 14px;
+            font-family: 'JetBrains Mono', monospace;
             font-size: 12.5px;
             line-height: 1.8;
-            padding: 10px 14px;
             resize: none;
             outline: none;
-            tab-size: 4;
+            background: transparent;
+            color: var(--text);
         }
         .panel textarea::placeholder {
-            color: var(--text-muted);
+            color: var(--muted);
             font-family: 'Inter', sans-serif;
-            font-size: 12px;
-            font-weight: 400;
         }
         .panel.output textarea {
             color: #065f46;
         }
         .panel.drag-over {
-            border-color: var(--accent-1);
+            border-color: var(--accent);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-            background: rgba(59, 130, 246, 0.03);
         }
         .drop-hint {
             display: none;
             position: absolute;
             inset: 0;
             background: rgba(59, 130, 246, 0.05);
-            border-radius: var(--radius-md);
+            border-radius: var(--radius);
             align-items: center;
             justify-content: center;
             font-size: 14px;
             font-weight: 600;
-            color: var(--accent-1);
+            color: var(--accent);
             pointer-events: none;
             backdrop-filter: blur(2px);
             z-index: 2;
@@ -776,15 +567,14 @@
         .log-panel {
             flex-shrink: 0;
             height: 120px;
-            background: var(--bg-log);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-color);
+            background: #fff;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
             margin-top: 8px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            transition: height 0.3s ease, opacity 0.2s ease;
-            box-shadow: var(--shadow-sm);
+            transition: height 0.3s, opacity 0.2s;
         }
         .log-panel.hidden {
             height: 0;
@@ -798,8 +588,8 @@
             justify-content: space-between;
             align-items: center;
             padding: 4px 14px;
-            background: var(--bg-surface);
-            border-bottom: 1px solid var(--border-color);
+            background: #f8fafc;
+            border-bottom: 1px solid var(--border);
             flex-shrink: 0;
             cursor: pointer;
             user-select: none;
@@ -807,81 +597,73 @@
         .log-header span {
             font-size: 10px;
             font-weight: 600;
-            color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 0.4px;
+            color: var(--muted);
             display: flex;
             align-items: center;
             gap: 6px;
         }
-        .log-header .log-badge {
-            background: var(--accent-gradient);
+        .log-header .badge {
+            background: var(--gradient);
             color: #fff;
             font-size: 9px;
             padding: 0 8px;
-            border-radius: var(--radius-full);
-            -webkit-text-fill-color: #fff;
+            border-radius: 999px;
         }
         .log-body {
             flex: 1;
             overflow-y: auto;
             padding: 4px 14px;
-            font-family: var(--font-mono);
+            font-family: 'JetBrains Mono', monospace;
             font-size: 11.5px;
             line-height: 1.7;
-            color: var(--text-log);
-            background: var(--bg-log);
+            color: #1e293b;
         }
-        .log-body .log-entry {
-            opacity: 0.85;
+        .log-body .entry {
             padding: 1px 0;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border);
+            opacity: 0.85;
         }
-        .log-body .log-entry:last-child {
-            border-bottom: none;
-        }
-        .log-body .log-entry.info {
+        .log-body .entry.info {
             color: #2563eb;
         }
-        .log-body .log-entry.success {
+        .log-body .entry.success {
             color: #059669;
         }
-        .log-body .log-entry.error {
+        .log-body .entry.error {
             color: #dc2626;
         }
-        .log-body .log-entry.warn {
+        .log-body .entry.warn {
             color: #d97706;
         }
-        .log-body .log-entry .time {
-            color: var(--text-muted);
-            opacity: 0.6;
+        .log-body .entry .time {
+            color: var(--muted);
             margin-right: 10px;
             font-size: 10px;
+            opacity: 0.6;
         }
         .log-clear {
             background: none;
             border: none;
-            color: var(--text-muted);
+            color: var(--muted);
             cursor: pointer;
             font-size: 10px;
             padding: 2px 8px;
-            border-radius: var(--radius-full);
-            transition: 0.2s;
+            border-radius: 999px;
         }
         .log-clear:hover {
-            background: var(--bg-elevated);
-            color: var(--text-primary);
+            background: #f1f5f9;
         }
-        .log-toggle-btn-small {
+        .log-toggle-small {
             background: none;
             border: none;
-            color: var(--text-muted);
+            color: var(--muted);
             cursor: pointer;
             font-size: 12px;
             padding: 0 4px;
         }
-        .log-toggle-btn-small:hover {
-            color: var(--text-primary);
+        .log-toggle-small:hover {
+            color: var(--text);
         }
         .status-bar {
             display: flex;
@@ -890,131 +672,33 @@
             margin-top: 6px;
             flex-shrink: 0;
             font-size: 11px;
-            color: var(--text-muted);
+            color: var(--muted);
             padding: 0 4px;
         }
         .status-bar .status {
-            color: var(--text-secondary);
-            font-weight: 500;
             display: flex;
             align-items: center;
             gap: 8px;
+            font-weight: 500;
+            color: var(--text);
         }
-        .status-bar .status .dot {
-            display: inline-block;
+        .status-bar .dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
             background: #94a3b8;
         }
-        .status-bar .status .dot.green {
+        .status-bar .dot.green {
             background: #10b981;
         }
-        .status-bar .status .dot.red {
+        .status-bar .dot.red {
             background: #ef4444;
         }
-        .status-bar .status .dot.yellow {
+        .status-bar .dot.yellow {
             background: #fbbf24;
         }
-        .status-bar .status .dot.blue {
+        .status-bar .dot.blue {
             background: #3b82f6;
-        }
-        #perfDisplay {
-            color: var(--text-muted);
-            font-feature-settings: "tnum";
-            font-size: 11px;
-        }
-        @media (max-width:1100px) {
-            .dashboard {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px
-            }
-            .stat-group {
-                justify-content: center
-            }
-            .quick-actions {
-                margin-left: 0;
-                justify-content: center
-            }
-            .recent-jobs {
-                margin-left: 0;
-                justify-content: center
-            }
-            .controls-row {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 6px
-            }
-            .control-group:not(:last-child)::after {
-                display: none
-            }
-            .control-group {
-                justify-content: center
-            }
-            .panels-wrapper {
-                flex-direction: column;
-                gap: 10px
-            }
-            .log-panel {
-                height: 100px
-            }
-            .app {
-                padding: 12px;
-                height: 99vh;
-                max-height: none;
-                border-radius: var(--radius-md)
-            }
-        }
-        @media (max-width:600px) {
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 4px
-            }
-            .header .links {
-                font-size: 11px;
-                gap: 10px;
-                flex-wrap: wrap
-            }
-            .toolbar {
-                flex-direction: column;
-                align-items: stretch
-            }
-            .toolbar-group {
-                justify-content: center
-            }
-            .toolbar-group:not(:last-child)::after {
-                display: none
-            }
-            .btn {
-                font-size: 10px;
-                padding: 3px 10px;
-                height: 24px
-            }
-            .slider-container input[type="range"] {
-                width: 80px
-            }
-            .log-panel {
-                height: 80px
-            }
-            .panel textarea {
-                font-size: 11px;
-                padding: 8px 10px
-            }
-        }
-        @keyframes fadeSlide {
-            from {
-                opacity: 0;
-                transform: translateY(8px)
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0)
-            }
-        }
-        .app {
-            animation: fadeSlide .3s ease-out
         }
         .progress-wrap {
             display: none;
@@ -1031,136 +715,204 @@
             height: 6px;
             border-radius: 3px;
             border: none;
-            background: var(--border-color);
-            color: var(--accent-1);
+            background: var(--border);
+            color: var(--accent);
         }
         .progress-wrap progress::-webkit-progress-bar {
-            background: var(--border-color);
+            background: var(--border);
             border-radius: 3px;
         }
         .progress-wrap progress::-webkit-progress-value {
-            background: var(--accent-gradient);
-            border-radius: 3px;
-        }
-        .progress-wrap progress::-moz-progress-bar {
-            background: var(--accent-gradient);
+            background: var(--gradient);
             border-radius: 3px;
         }
         .progress-wrap .prog-label {
             font-size: 10px;
             font-weight: 600;
-            color: var(--text-muted);
+            color: var(--muted);
             min-width: 40px;
             text-align: right;
+        }
+        @media (max-width: 1100px) {
+            .panels-wrapper {
+                flex-direction: column;
+            }
+            .controls-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .control-group:not(:last-child)::after {
+                display: none;
+            }
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .toolbar-group:not(:last-child)::after {
+                display: none;
+            }
+            .dashboard {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .stat-group {
+                justify-content: center;
+            }
+            .quick-actions {
+                justify-content: center;
+                margin-left: 0;
+            }
+            .recent-jobs {
+                justify-content: center;
+                margin-left: 0;
+            }
+        }
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .header .links {
+                font-size: 11px;
+                flex-wrap: wrap;
+            }
+            .panel textarea {
+                font-size: 11px;
+                padding: 8px 10px;
+            }
+            .log-panel {
+                height: 80px;
+            }
+            .slider-container input[type="range"] {
+                width: 80px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="app" id="app">
+    <div class="app">
         <div class="header">
-            <div class="header-left"><h1>finny.obf</h1><span class="badge">v4</span></div>
-            <div class="links"><span>⚡ Decimal‑escape loader</span><a href="#">Docs</a><a href="#">GitHub</a><div class="user-avatar">JD</div></div>
+            <div>
+                <h1>finny.obf <span class="badge">v5</span></h1>
+            </div>
+            <div class="links">
+                <span>⚡ Decimal‑escape loader</span>
+                <a href="#">Docs</a>
+                <a href="#">GitHub</a>
+                <div style="width:28px;height:28px;border-radius:50%;background:var(--gradient);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;text-transform:uppercase;">JD</div>
+            </div>
         </div>
+
         <div class="dashboard">
             <div class="stat-group">
                 <div class="stat-item"><span class="label">Processing</span><span class="value" id="processingCount">0</span></div>
-                <div class="stat-divider"></div>
                 <div class="stat-item"><span class="label">Total Jobs</span><span class="value" id="totalJobs">0</span></div>
-                <div class="stat-divider"></div>
                 <div class="stat-item"><span class="label">Active jobs</span><span class="value" id="activeJobs">0</span></div>
             </div>
             <div class="quick-actions">
-                <button class="btn-sm primary" id="uploadQuickBtn">📤 Upload</button>
-                <button class="btn-sm" id="historyQuickBtn">📋 History</button>
+                <button class="primary" id="uploadQuick">📤 Upload</button>
+                <button id="historyQuick">📋 History</button>
             </div>
         </div>
-        <div class="recent-jobs" style="margin-bottom:10px;">
-            <span style="font-weight:600;font-size:11px;color:var(--text-secondary);">Recent Jobs</span>
-            <div id="recentJobsContainer"><span class="empty">No jobs yet</span></div>
-            <a href="#" class="view-all" id="viewAllLink">View All →</a>
+
+        <div class="recent-jobs">
+            <span style="font-weight:600;font-size:11px;color:var(--text);">Recent Jobs</span>
+            <div id="recentJobs"><span class="empty">No jobs yet</span></div>
+            <a href="#" id="viewAll">View All →</a>
         </div>
+
         <div class="toolbar">
             <div class="toolbar-group">
-                <label>Preset <select id="presetSelect"><option value="minify">Minify</option><option value="weak" selected>Weak</option><option value="medium">Medium</option><option value="strong">Strong</option><option value="custom">Custom</option></select></label>
-                <label>Lua <select id="luaVersion"><option value="5.1">Lua 5.1</option><option value="5.2">Lua 5.2</option><option value="luau" selected>Luau</option></select></label>
-                <label>Seed <input type="number" id="seedInput" value="0" step="1" style="width:60px;" /></label>
+                <label>Preset <select id="preset"><option value="minify">Minify</option><option value="weak" selected>Weak</option><option value="medium">Medium</option><option value="strong">Strong</option><option value="custom">Custom</option></select></label>
+                <label>Seed <input type="number" id="seed" value="0" style="width:60px;" /></label>
             </div>
             <div class="toolbar-group">
-                <label class="switch"><input type="checkbox" id="prettyPrint" checked /><span class="slider"></span></label><label>Pretty</label>
-                <label class="switch"><input type="checkbox" id="safeMode" checked /><span class="slider"></span></label><label>Safe</label>
+                <label class="switch"><input type="checkbox" id="pretty" checked /><span class="slider"></span></label>
+                <label>Pretty</label>
+                <label class="switch"><input type="checkbox" id="safe" checked /><span class="slider"></span></label>
+                <label>Safe</label>
             </div>
             <div class="toolbar-group" style="flex:1;justify-content:flex-end;">
-                <button class="btn btn-primary" id="obfuscateBtn">▶ Run</button>
-                <button class="btn btn-danger" id="deobfuscateBtn">◀ Deobf</button>
+                <button class="btn btn-primary" id="obfBtn">▶ Run</button>
+                <button class="btn btn-danger" id="deobfBtn">◀ Deobf</button>
                 <button class="btn btn-ghost" id="clearBtn">✕ Clear</button>
-                <span class="file-actions">
-                    <button class="btn" id="loadBtn">📂 Load</button>
-                    <input type="file" id="fileInput" style="display:none;" accept=".lua,.txt" />
-                    <button class="btn btn-success" id="copyBtn">📋 Copy</button>
-                    <button class="btn" id="downloadBtn">⬇ Dwn</button>
-                </span>
-                <button class="log-toggle-btn" id="logToggleBtn">📋 Log</button>
+                <button class="btn" id="loadBtn">📂 Load</button>
+                <input type="file" id="fileInput" style="display:none;" accept=".lua,.txt" />
+                <button class="btn btn-success" id="copyBtn">📋 Copy</button>
+                <button class="btn" id="downloadBtn">⬇ Dwn</button>
+                <button class="log-toggle-btn" id="logToggle">📋 Log</button>
                 <div class="progress-wrap" id="progressWrap"><progress id="progressBar" max="100" value="0"></progress><span class="prog-label" id="progressLabel">0%</span></div>
             </div>
         </div>
+
         <div class="controls-row">
             <div class="control-group">
                 <span class="control-label">Protection</span>
-                <div class="slider-container"><input type="range" id="protectionLevel" min="0" max="100" value="80" /><span class="slider-value" id="protectionValue">80%</span></div>
+                <div class="slider-container"><input type="range" id="protection" min="0" max="100" value="80" /><span class="slider-value" id="protectionValue">80%</span></div>
             </div>
             <div class="control-group">
-                <label class="control-toggle"><input type="checkbox" id="deadCodeToggle" checked /> Dead Code</label>
-                <label class="control-toggle"><input type="checkbox" id="antiDebugToggle" checked /> Anti-Debug</label>
+                <label class="control-toggle"><input type="checkbox" id="deadCode" checked /> Dead Code</label>
+                <label class="control-toggle"><input type="checkbox" id="antiDebug" checked /> Anti-Debug</label>
             </div>
             <div class="control-group">
                 <span class="control-label">Format</span>
                 <div class="format-group">
-                    <label class="radio-label"><input type="radio" name="outputFormat" value="minified" /> Minified</label>
-                    <label class="radio-label"><input type="radio" name="outputFormat" value="pretty" checked /> Pretty</label>
+                    <label><input type="radio" name="format" value="minified" /> Minified</label>
+                    <label><input type="radio" name="format" value="pretty" checked /> Pretty</label>
                 </div>
             </div>
             <div class="control-group" style="flex:1;justify-content:flex-end;">
-                <span class="advanced-toggle" id="advancedToggle">▸ Advanced layers</span>
+                <span class="advanced-toggle" id="advToggle">▸ Advanced layers</span>
             </div>
         </div>
+
         <div class="layer-toggles" id="layerToggles">
             <div class="toggle"><input type="checkbox" id="allLayers" checked /><label>ALL</label></div>
-            <div class="toggle"><input type="checkbox" id="layer1" checked /><label>L1</label></div>
-            <div class="toggle"><input type="checkbox" id="layer2" checked /><label>L2</label></div>
-            <div class="toggle"><input type="checkbox" id="layer3" checked /><label>L3</label></div>
-            <div class="toggle"><input type="checkbox" id="layer4" checked /><label>L4</label></div>
-            <div class="toggle"><input type="checkbox" id="layer5" checked /><label>L5</label></div>
-            <div class="toggle"><input type="checkbox" id="layer6" checked /><label>L6</label></div>
-            <div class="toggle"><input type="checkbox" id="layer7" checked /><label>L7</label></div>
-            <div class="toggle"><input type="checkbox" id="layer8" checked /><label>L8</label></div>
-            <div class="toggle"><input type="checkbox" id="layer9" checked /><label>L9</label></div>
-            <div class="toggle"><input type="checkbox" id="layer10" checked /><label>L10</label></div>
+            <div class="toggle"><input type="checkbox" id="l1" checked /><label>L1</label></div>
+            <div class="toggle"><input type="checkbox" id="l2" checked /><label>L2</label></div>
+            <div class="toggle"><input type="checkbox" id="l3" checked /><label>L3</label></div>
+            <div class="toggle"><input type="checkbox" id="l4" checked /><label>L4</label></div>
+            <div class="toggle"><input type="checkbox" id="l5" checked /><label>L5</label></div>
+            <div class="toggle"><input type="checkbox" id="l6" checked /><label>L6</label></div>
+            <div class="toggle"><input type="checkbox" id="l7" checked /><label>L7</label></div>
+            <div class="toggle"><input type="checkbox" id="l8" checked /><label>L8</label></div>
+            <div class="toggle"><input type="checkbox" id="l9" checked /><label>L9</label></div>
+            <div class="toggle"><input type="checkbox" id="l10" checked /><label>L10</label></div>
         </div>
+
         <div class="panels-wrapper">
             <div class="panel" id="inputPanel">
                 <div class="drop-hint">📂 Drop .lua here</div>
                 <div class="panel-header"><span>📄 Input</span><span class="count" id="inputCount">0 lines</span></div>
-                <textarea id="sourceCode" placeholder="Paste your Luau source here or drag & drop a file"></textarea>
+                <textarea id="source" placeholder="Paste your Luau source or drag & drop a file"></textarea>
             </div>
             <div class="panel output">
                 <div class="panel-header"><span>📦 Output</span><span class="count" id="outputCount">0 lines</span></div>
-                <textarea id="obfuscatedOutput" readonly placeholder="Obfuscated code will appear here"></textarea>
+                <textarea id="output" readonly placeholder="Obfuscated code will appear here"></textarea>
             </div>
         </div>
+
         <div class="log-panel" id="logPanel">
-            <div class="log-header" id="logHeader"><span>📋 Log <span class="log-badge" id="logCount">0</span></span><div style="display:flex;gap:4px;align-items:center;"><button class="log-clear" id="logClear">Clear</button><button class="log-toggle-btn-small" id="logToggleSmall">▾</button></div></div>
-            <div class="log-body" id="logBody"><div class="log-entry info"><span class="time">[init]</span> finny.obf v4 — loader matches your sample</div></div>
+            <div class="log-header" id="logHeader"><span>📋 Log <span class="badge" id="logBadge">0</span></span><div><button class="log-clear" id="logClear">Clear</button><button class="log-toggle-small" id="logToggleSmall">▾</button></div></div>
+            <div class="log-body" id="logBody"><div class="entry info"><span class="time">[init]</span> finny.obf v5 ready</div></div>
         </div>
-        <div class="status-bar"><span class="status" id="status"><span class="dot green" id="statusDot"></span><span id="statusText">Ready</span></span><span id="perfDisplay"></span></div>
+
+        <div class="status-bar">
+            <span class="status"><span class="dot green" id="statusDot"></span><span id="statusText">Ready</span></span>
+            <span id="perfDisplay"></span>
+        </div>
     </div>
 
     <script>
         (function() {
-            // ─── DOM refs ───
-            const source = document.getElementById('sourceCode');
-            const output = document.getElementById('obfuscatedOutput');
-            const obfBtn = document.getElementById('obfuscateBtn');
-            const deobfBtn = document.getElementById('deobfuscateBtn');
+            "use strict";
+
+            // ─── DOM refs ──────────────────────────────────────────────
+            const source = document.getElementById('source');
+            const output = document.getElementById('output');
+            const obfBtn = document.getElementById('obfBtn');
+            const deobfBtn = document.getElementById('deobfBtn');
             const clearBtn = document.getElementById('clearBtn');
             const copyBtn = document.getElementById('copyBtn');
             const downloadBtn = document.getElementById('downloadBtn');
@@ -1169,94 +921,99 @@
             const statusText = document.getElementById('statusText');
             const statusDot = document.getElementById('statusDot');
             const perfDisplay = document.getElementById('perfDisplay');
-            const presetSelect = document.getElementById('presetSelect');
-            const seedInput = document.getElementById('seedInput');
-            const prettyPrint = document.getElementById('prettyPrint');
-            const safeMode = document.getElementById('safeMode');
+            const presetSelect = document.getElementById('preset');
+            const seedInput = document.getElementById('seed');
+            const prettyCheck = document.getElementById('pretty');
+            const safeCheck = document.getElementById('safe');
             const allLayers = document.getElementById('allLayers');
-            const layerCheckboxes = [
-                document.getElementById('layer1'), document.getElementById('layer2'),
-                document.getElementById('layer3'), document.getElementById('layer4'),
-                document.getElementById('layer5'), document.getElementById('layer6'),
-                document.getElementById('layer7'), document.getElementById('layer8'),
-                document.getElementById('layer9'), document.getElementById('layer10')
+            const layerChecks = [
+                document.getElementById('l1'), document.getElementById('l2'),
+                document.getElementById('l3'), document.getElementById('l4'),
+                document.getElementById('l5'), document.getElementById('l6'),
+                document.getElementById('l7'), document.getElementById('l8'),
+                document.getElementById('l9'), document.getElementById('l10')
             ];
-            const advancedToggle = document.getElementById('advancedToggle');
+            const advToggle = document.getElementById('advToggle');
             const layerToggles = document.getElementById('layerToggles');
             const inputCount = document.getElementById('inputCount');
             const outputCount = document.getElementById('outputCount');
             const logBody = document.getElementById('logBody');
-            const logCount = document.getElementById('logCount');
+            const logBadge = document.getElementById('logBadge');
             const logClear = document.getElementById('logClear');
             const logToggleSmall = document.getElementById('logToggleSmall');
             const logPanel = document.getElementById('logPanel');
             const logHeader = document.getElementById('logHeader');
-            const logToggleBtn = document.getElementById('logToggleBtn');
+            const logToggle = document.getElementById('logToggle');
             const inputPanel = document.getElementById('inputPanel');
-            const protectionLevel = document.getElementById('protectionLevel');
+            const protectionSlider = document.getElementById('protection');
             const protectionValue = document.getElementById('protectionValue');
-            const deadCodeToggle = document.getElementById('deadCodeToggle');
-            const antiDebugToggle = document.getElementById('antiDebugToggle');
-            const formatRadios = document.querySelectorAll('input[name="outputFormat"]');
-            const uploadQuickBtn = document.getElementById('uploadQuickBtn');
-            const historyQuickBtn = document.getElementById('historyQuickBtn');
+            const deadCodeCheck = document.getElementById('deadCode');
+            const antiDebugCheck = document.getElementById('antiDebug');
+            const formatRadios = document.querySelectorAll('input[name="format"]');
+            const uploadQuick = document.getElementById('uploadQuick');
+            const historyQuick = document.getElementById('historyQuick');
             const totalJobsEl = document.getElementById('totalJobs');
             const processingCountEl = document.getElementById('processingCount');
             const activeJobsEl = document.getElementById('activeJobs');
-            const recentJobsContainer = document.getElementById('recentJobsContainer');
-            const viewAllLink = document.getElementById('viewAllLink');
+            const recentJobsContainer = document.getElementById('recentJobs');
+            const viewAll = document.getElementById('viewAll');
             const progressWrap = document.getElementById('progressWrap');
             const progressBar = document.getElementById('progressBar');
             const progressLabel = document.getElementById('progressLabel');
 
-            // ─── State ───
+            // ─── State ────────────────────────────────────────────────
             let totalJobs = 0,
                 activeJobs = 0,
                 logEntries = 0,
                 logVisible = true,
-                isProcessing = false;
+                processing = false;
             let recentJobs = [];
             let rand = mulberry32(0);
 
-            function mulberry32(a) { return function() { a |= 0;
-                    a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a);
-                    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+            function mulberry32(a) {
+                return function() {
+                    a |= 0;
+                    a = a + 0x6D2B79F5 | 0;
+                    let t = Math.imul(a ^ a >>> 15, 1 | a);
+                    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+                    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+                };
+            }
 
             function reseed(s) { rand = mulberry32(s || 0); }
 
-            // ─── Logger ───
+            // ─── Logger ────────────────────────────────────────────────
             function log(msg, type = 'info') {
                 const t = new Date().toLocaleTimeString();
                 const e = document.createElement('div');
-                e.className = 'log-entry ' + type;
+                e.className = 'entry ' + type;
                 e.innerHTML = `<span class="time">[${t}]</span>${msg}`;
                 logBody.appendChild(e);
                 logBody.scrollTop = logBody.scrollHeight;
                 logEntries++;
-                logCount.textContent = logEntries;
+                logBadge.textContent = logEntries;
                 if (logEntries > 500) { logBody.removeChild(logBody.firstChild);
                     logEntries--; }
             }
 
             function setStatus(text, state = 'ready') {
                 statusText.textContent = text;
-                statusDot.className = 'dot';
-                if (state === 'ready') statusDot.classList.add('green');
-                else if (state === 'error') statusDot.classList.add('red');
-                else if (state === 'warn') statusDot.classList.add('yellow');
-                else if (state === 'info') statusDot.classList.add('blue');
+                statusDot.className = 'dot ' + state;
             }
 
             function updateDashboard() {
                 totalJobsEl.textContent = totalJobs;
                 processingCountEl.textContent = 0;
                 activeJobsEl.textContent = activeJobs;
-                if (!recentJobs.length) { recentJobsContainer.innerHTML = '<span class="empty">No jobs yet</span>'; return; }
+                if (!recentJobs.length) {
+                    recentJobsContainer.innerHTML = '<span class="empty">No jobs yet</span>';
+                    return;
+                }
                 let html = '';
                 const show = recentJobs.slice(-3).reverse();
                 for (const j of show) {
                     const st = j.status === 'COMPLETED' ? '#10b981' : '#fbbf24';
-                    html += `<div class="job"><span class="status" style="background:${st}"></span><span class="name">${j.name}</span><span class="meta">${j.status} · ${j.size} · ${j.time}</span></div>`;
+                    html += `<div class="job"><span class="dot" style="background:${st}"></span><span class="name">${j.name}</span><span class="meta">${j.status} · ${j.size} · ${j.time}</span></div>`;
                 }
                 recentJobsContainer.innerHTML = html;
             }
@@ -1273,28 +1030,34 @@
             function toggleLogPanel(show) {
                 logVisible = (show !== undefined) ? show : !logVisible;
                 logPanel.classList.toggle('hidden', !logVisible);
-                logToggleBtn.classList.toggle('active', logVisible);
+                logToggle.classList.toggle('active', logVisible);
                 logToggleSmall.textContent = logVisible ? '▾' : '▸';
             }
-            logToggleBtn.addEventListener('click', e => { e.stopPropagation();
+            logToggle.addEventListener('click', e => { e.stopPropagation();
                 toggleLogPanel(); });
-            logHeader.addEventListener('click', e => { if (e.target.closest('.log-clear') || e.target.closest(
-                        '.log-toggle-btn-small')) return;
-                toggleLogPanel(); });
+            logHeader.addEventListener('click', e => {
+                if (e.target.closest('.log-clear') || e.target.closest('.log-toggle-small')) return;
+                toggleLogPanel();
+            });
             logToggleSmall.addEventListener('click', e => { e.stopPropagation();
                 toggleLogPanel(); });
-            logClear.addEventListener('click', e => { e.stopPropagation();
+            logClear.addEventListener('click', e => {
+                e.stopPropagation();
                 logBody.innerHTML = '';
                 logEntries = 0;
-                logCount.textContent = '0';
-                log('Log cleared', 'info'); });
-            protectionLevel.addEventListener('input', function() { protectionValue.textContent = this.value + '%'; });
-            uploadQuickBtn.addEventListener('click', function() { loadBtn.click(); });
-            historyQuickBtn.addEventListener('click', function() { log('📋 Opening history...', 'info');
-                setStatus('History viewed', 'info'); if (!recentJobs.length) log('No jobs yet', 'warn');
-                else log('📋 History: ' + recentJobs.length + ' jobs', 'info'); });
-            viewAllLink.addEventListener('click', e => { e.preventDefault();
-                historyQuickBtn.click(); });
+                logBadge.textContent = '0';
+                log('Log cleared', 'info');
+            });
+            protectionSlider.addEventListener('input', function() { protectionValue.textContent = this.value + '%'; });
+            uploadQuick.addEventListener('click', () => loadBtn.click());
+            historyQuick.addEventListener('click', () => {
+                log('📋 Opening history...', 'info');
+                setStatus('History viewed', 'blue');
+                if (!recentJobs.length) log('No jobs yet', 'warn');
+                else log('📋 History: ' + recentJobs.length + ' jobs', 'info');
+            });
+            viewAll.addEventListener('click', e => { e.preventDefault();
+                historyQuick.click(); });
 
             function setProgress(pct, label) {
                 if (pct === undefined) { progressWrap.classList.remove('active'); return; }
@@ -1303,28 +1066,31 @@
                 progressLabel.textContent = label || (Math.round(pct) + '%');
             }
 
-            // ─── Tokenizer ───
+            // ─── Tokenizer ─────────────────────────────────────────────
             function tokenizeLua(code) {
                 const tokens = [];
                 let i = 0,
                     n = code.length;
-                const push = (type, val, s, e) => { tokens.push([type, val, s, e]); };
+                const push = (type, val) => tokens.push([type, val]);
                 while (i < n) {
                     const ch = code[i];
+                    // whitespace
                     if (ch === ' ' || ch === '\t' || ch === '\r' || ch === '\n') {
                         let s = i;
                         while (i < n && (code[i] === ' ' || code[i] === '\t' || code[i] === '\r' || code[i] === '\n')) i++;
-                        push('ws', code.substring(s, i), s, i);
+                        push('ws', code.substring(s, i));
                         continue;
                     }
+                    // comment
                     if (ch === '-' && i + 1 < n && code[i + 1] === '-') {
                         let s = i,
                             e = code.indexOf('\n', i);
                         if (e === -1) e = n;
-                        push('comment', code.substring(s, e), s, e);
+                        push('comment', code.substring(s, e));
                         i = e;
                         continue;
                     }
+                    // long string
                     if (ch === '[' && i + 1 < n && code[i + 1] === '[') {
                         let s = i,
                             level = 0,
@@ -1335,10 +1101,11 @@
                             let close = ']' + '='.repeat(level) + ']';
                             let ep = code.indexOf(close, pos + 1);
                             if (ep !== -1) { ep += close.length;
-                                push('longstring', code.substring(s, ep), s, ep);
+                                push('longstring', code.substring(s, ep));
                                 i = ep; continue; }
                         }
                     }
+                    // quoted string
                     if (ch === "'" || ch === '"') {
                         let s = i,
                             q = ch;
@@ -1347,9 +1114,10 @@
                             if (code[i] === '\\') i += 2;
                             else if (code[i] === q) { i++; break; } else i++;
                         }
-                        push('string', code.substring(s, i), s, i);
+                        push('string', code.substring(s, i));
                         continue;
                     }
+                    // number
                     if (/[0-9]/.test(ch) || (ch === '.' && i + 1 < n && /[0-9]/.test(code[i + 1]))) {
                         let s = i;
                         if (ch === '0' && i + 1 < n && (code[i + 1] === 'x' || code[i + 1] === 'X')) {
@@ -1364,23 +1132,25 @@
                                 while (i < n && /[0-9]/.test(code[i])) i++;
                             }
                         }
-                        push('number', code.substring(s, i), s, i);
+                        push('number', code.substring(s, i));
                         continue;
                     }
+                    // ident
                     if (/[a-zA-Z_]/.test(ch)) {
                         let s = i;
                         while (i < n && /[a-zA-Z0-9_]/.test(code[i])) i++;
-                        push('ident', code.substring(s, i), s, i);
+                        push('ident', code.substring(s, i));
                         continue;
                     }
+                    // other
                     let s = i;
                     i++;
-                    push('other', code.substring(s, i), s, i);
+                    push('other', code.substring(s, i));
                 }
                 return tokens;
             }
 
-            // ─── Helpers ───
+            // ─── Helpers ───────────────────────────────────────────────
             function safeMinify(code) {
                 const toks = tokenizeLua(code);
                 let out = '',
@@ -1438,10 +1208,12 @@
                 return out;
             }
 
-            function randomVar(len) { let r = '';
+            function randomVar(len) {
+                let r = '';
                 for (let i = 0; i < (len || 8); i++) r += 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' [Math.floor(
-                        rand() * 52)];
-                return r; }
+                    rand() * 52)];
+                return r;
+            }
 
             function randomKey() { return Math.floor(rand() * 256); }
 
@@ -1562,7 +1334,7 @@
         local _p,_e=pcall(unpack,{},0,2147483647)if _p then error("skid")end\n`;
             }
 
-            // ─── Apply layers ───
+            // ─── Apply layers ───────────────────────────────────────────
             function applyLayers(code, layers, safe, protection, deadCode, antiDebug) {
                 let p = code;
                 if (deadCode && protection > 20) {
@@ -1657,7 +1429,7 @@
                 return p;
             }
 
-            // ─── toDecimalEscapes ───
+            // ─── toDecimalEscapes ──────────────────────────────────────
             function toDecimalEscapes(str) {
                 let out = '';
                 for (let i = 0; i < str.length; i++) {
@@ -1667,8 +1439,8 @@
                 return out;
             }
 
-            // ─── LOADER – matches your sample exactly ───
-            function generateClassicLoader(processed, seed) {
+            // ─── Loader generator (matches sample style) ──────────────
+            function generateLoader(processed) {
                 const encoded = toDecimalEscapes(processed);
                 const chunkSize = 180;
                 const chunks = [];
@@ -1682,17 +1454,28 @@
                 }
                 tableStr += '}';
 
-                // Optional shuffle if seed is not 0 (adds a layer, but we keep it optional)
-                // To exactly match the sample's simplicity, we just use the table directly.
-                // But we keep the shuffle as an advanced feature via seed.
+                // Build loader with a robust decoder
                 let loader = 'return(function(...)local f=' + tableStr + '\n';
-                loader += 'local function d(s)local t={}for i=1,#s do local n=tonumber(s:sub(i,i+2))if n then t[#t+1]=string.char(n)end i=i+2 end return table.concat(t)end\n';
+                loader += 'local function d(s)\n';
+                loader += '  local t={}\n';
+                loader += '  local i=1\n';
+                loader += '  while i<=#s do\n';
+                loader += '    local n=tonumber(s:sub(i,i+2))\n';
+                loader += '    if n then\n';
+                loader += '      t[#t+1]=string.char(n)\n';
+                loader += '      i=i+3\n';
+                loader += '    else\n';
+                loader += '      i=i+1\n';
+                loader += '    end\n';
+                loader += '  end\n';
+                loader += '  return table.concat(t)\n';
+                loader += 'end\n';
                 loader += 'local r="" for i=1,#f do r=r..d(f[i])end loadstring(r)()end)()\n';
                 return loader;
             }
 
-            // ─── Deobfuscator ───
-            function deobfuscateOutput(code) {
+            // ─── Deobfuscator ──────────────────────────────────────────
+            function deobfuscate(code) {
                 try {
                     const tableMatch = code.match(/local f=({[^}]+})/);
                     if (!tableMatch) return 'Could not find encoded table';
@@ -1721,7 +1504,7 @@
                 } catch (e) { return 'Deobf error: ' + e.message; }
             }
 
-            // ─── UI helpers ───
+            // ─── UI helpers ────────────────────────────────────────────
             function updateCounts() {
                 inputCount.textContent = source.value.split('\n').length + ' lines';
                 outputCount.textContent = output.value.split('\n').length + ' lines';
@@ -1736,18 +1519,20 @@
                 else if (mode === 'medium') idx = [0, 1, 2, 3, 4, 5];
                 else if (mode === 'strong') idx = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
                 else return;
-                layerCheckboxes.forEach((cb, i) => cb.checked = idx.includes(i));
+                layerChecks.forEach((cb, i) => cb.checked = idx.includes(i));
                 allLayers.checked = idx.length === 10;
             }
 
-            presetSelect.addEventListener('change', function() { if (this.value !== 'custom') { setPreset(this.value);
-                    log('Preset: ' + this.value, 'info'); } });
-            allLayers.addEventListener('change', function() { layerCheckboxes.forEach(cb => cb.checked = this.checked); });
-            layerCheckboxes.forEach(cb => {
+            presetSelect.addEventListener('change', function() {
+                if (this.value !== 'custom') { setPreset(this.value);
+                    log('Preset: ' + this.value, 'info'); }
+            });
+            allLayers.addEventListener('change', function() { layerChecks.forEach(cb => cb.checked = this.checked); });
+            layerChecks.forEach(cb => {
                 cb.addEventListener('change', function() {
                     if (!this.checked) allLayers.checked = false;
-                    else if (layerCheckboxes.every(c => c.checked)) allLayers.checked = true;
-                    const cur = layerCheckboxes.map(c => c.checked);
+                    else if (layerChecks.every(c => c.checked)) allLayers.checked = true;
+                    const cur = layerChecks.map(c => c.checked);
                     const presets = {
                         minify: [true, false, false, false, false, false, false, false, false, false],
                         weak: [true, true, true, false, false, false, false, false, false, false],
@@ -1763,14 +1548,14 @@
                 });
             });
 
-            let advancedOpen = false;
-            advancedToggle.addEventListener('click', function() {
-                advancedOpen = !advancedOpen;
-                layerToggles.classList.toggle('open', advancedOpen);
-                this.textContent = advancedOpen ? '▾ Advanced layers' : '▸ Advanced layers';
+            let advOpen = false;
+            advToggle.addEventListener('click', function() {
+                advOpen = !advOpen;
+                layerToggles.classList.toggle('open', advOpen);
+                this.textContent = advOpen ? '▾ Advanced layers' : '▸ Advanced layers';
             });
 
-            // ─── Drag & Drop ───
+            // ─── Drag & Drop ───────────────────────────────────────────
             let dragC = 0;
             inputPanel.addEventListener('dragover', e => { e.preventDefault();
                 e.stopPropagation();
@@ -1790,31 +1575,35 @@
                     const file = files[0];
                     if (file.name.endsWith('.lua') || file.name.endsWith('.txt')) {
                         const reader = new FileReader();
-                        reader.onload = function(ev) { source.value = ev.target.result;
+                        reader.onload = function(ev) {
+                            source.value = ev.target.result;
                             updateCounts();
                             log('📂 Loaded: ' + file.name + ' (' + file.size + ' bytes)', 'success');
-                            setStatus('Loaded ' + file.name, 'ready'); };
+                            setStatus('Loaded ' + file.name, 'green');
+                        };
                         reader.onerror = function() { log('❌ Failed to read ' + file.name, 'error');
-                            setStatus('Read error', 'error'); };
+                            setStatus('Read error', 'red'); };
                         reader.readAsText(file);
                     } else { log('⚠️ Skipped: ' + file.name + ' (only .lua/.txt)', 'warn');
-                        setStatus('Unsupported file', 'warn'); }
+                        setStatus('Unsupported file', 'yellow'); }
                 }
             });
             document.addEventListener('dragover', e => e.preventDefault());
             document.addEventListener('drop', e => e.preventDefault());
 
-            loadBtn.addEventListener('click', function() { fileInput.click(); });
+            loadBtn.addEventListener('click', () => fileInput.click());
             fileInput.addEventListener('change', function() {
                 const file = this.files[0];
                 if (!file) return;
                 const reader = new FileReader();
-                reader.onload = function(e) { source.value = e.target.result;
+                reader.onload = function(e) {
+                    source.value = e.target.result;
                     updateCounts();
                     log('📂 Loaded: ' + file.name + ' (' + file.size + ' bytes)', 'success');
-                    setStatus('Loaded ' + file.name, 'ready'); };
+                    setStatus('Loaded ' + file.name, 'green');
+                };
                 reader.onerror = function() { log('❌ Failed to read ' + file.name, 'error');
-                    setStatus('Read error', 'error'); };
+                    setStatus('Read error', 'red'); };
                 reader.readAsText(file);
                 this.value = '';
             });
@@ -1822,18 +1611,18 @@
             copyBtn.addEventListener('click', function() {
                 const text = output.value;
                 if (!text) { log('⚠️ Nothing to copy', 'warn');
-                    setStatus('Nothing to copy', 'warn'); return; }
+                    setStatus('Nothing to copy', 'yellow'); return; }
                 navigator.clipboard?.writeText(text).then(() => { log('📋 Copied', 'success');
-                    setStatus('Copied', 'ready'); }).catch(() => { output.select();
+                    setStatus('Copied', 'green'); }).catch(() => { output.select();
                     document.execCommand('copy');
                     log('📋 Copied (fallback)', 'success');
-                    setStatus('Copied', 'ready'); });
+                    setStatus('Copied', 'green'); });
             });
 
             downloadBtn.addEventListener('click', function() {
                 const text = output.value;
                 if (!text) { log('⚠️ Nothing to download', 'warn');
-                    setStatus('Nothing to download', 'warn'); return; }
+                    setStatus('Nothing to download', 'yellow'); return; }
                 const blob = new Blob([text], { type: 'text/plain' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -1844,41 +1633,43 @@
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
                 log('⬇️ Downloaded finny_output.lua', 'success');
-                setStatus('Downloaded', 'ready');
+                setStatus('Downloaded', 'green');
             });
 
-            clearBtn.addEventListener('click', function() { source.value = '';
+            clearBtn.addEventListener('click', function() {
+                source.value = '';
                 output.value = '';
                 updateCounts();
                 log('🗑️ Cleared', 'info');
-                setStatus('Cleared', 'ready'); });
+                setStatus('Cleared', 'green');
+            });
 
-            function getOutputFormat() { for (const r of formatRadios)
+            function getFormat() { for (const r of formatRadios)
                     if (r.checked) return r.value; return 'pretty'; }
 
-            // ─── Obfuscate ───
+            // ─── Obfuscate ─────────────────────────────────────────────
             obfBtn.addEventListener('click', function() {
                 const input = source.value;
                 if (!input.trim()) { log('⚠️ Paste some code first', 'warn');
-                    setStatus('Paste some code first', 'warn'); return; }
-                if (isProcessing) return;
-                isProcessing = true;
+                    setStatus('Paste some code first', 'yellow'); return; }
+                if (processing) return;
+                processing = true;
                 obfBtn.disabled = true;
                 deobfBtn.disabled = true;
-                setStatus('Obfuscating...', 'info');
+                setStatus('Obfuscating...', 'blue');
                 log('⚙️ Starting obfuscation...', 'info');
                 setProgress(0, '0%');
 
                 const seed = parseInt(seedInput.value) || 0;
-                const layers = layerCheckboxes.map(cb => cb.checked);
-                const safe = safeMode.checked;
-                const protection = parseInt(protectionLevel.value) || 50;
-                const deadCode = deadCodeToggle.checked;
-                const antiDebug = antiDebugToggle.checked;
-                const format = getOutputFormat();
-                const wasPretty = prettyPrint.checked;
-                if (format === 'minified') prettyPrint.checked = false;
-                else prettyPrint.checked = true;
+                const layers = layerChecks.map(cb => cb.checked);
+                const safe = safeCheck.checked;
+                const protection = parseInt(protectionSlider.value) || 50;
+                const deadCode = deadCodeCheck.checked;
+                const antiDebug = antiDebugCheck.checked;
+                const format = getFormat();
+                const wasPretty = prettyCheck.checked;
+                if (format === 'minified') prettyCheck.checked = false;
+                else prettyCheck.checked = true;
 
                 let jobName = 'script.lua';
                 const first = source.value.split('\n')[0];
@@ -1891,62 +1682,62 @@
                         setProgress(10, '10%');
                         const processed = applyLayers(input, layers, safe, protection, deadCode, antiDebug);
                         setProgress(60, '60%');
-                        const result = generateClassicLoader(processed, seed);
+                        const result = generateLoader(processed);
                         setProgress(90, '90%');
                         output.value = result;
                         updateCounts();
-                        prettyPrint.checked = wasPretty;
+                        prettyCheck.checked = wasPretty;
                         const elapsed = (performance.now() - start).toFixed(0);
                         log('✅ Obfuscation done in ' + elapsed + 'ms (' + layers.filter(Boolean).length +
                             ' layers, ' + protection + '% protection)', 'success');
-                        setStatus('Done in ' + elapsed + 'ms', 'ready');
+                        setStatus('Done in ' + elapsed + 'ms', 'green');
                         perfDisplay.textContent = elapsed + 'ms';
                         addJob(jobName, 'COMPLETED');
                         setProgress(100, '100%');
                         setTimeout(() => setProgress(), 800);
                     } catch (e) {
                         log('❌ Error: ' + e.message, 'error');
-                        setStatus('Error: ' + e.message, 'error');
+                        setStatus('Error: ' + e.message, 'red');
                         console.error(e);
                         perfDisplay.textContent = 'error';
                         setProgress();
                     } finally {
-                        isProcessing = false;
+                        processing = false;
                         obfBtn.disabled = false;
                         deobfBtn.disabled = false;
-                        prettyPrint.checked = wasPretty;
+                        prettyCheck.checked = wasPretty;
                     }
                 }, 20);
             });
 
-            // ─── Deobfuscate ───
+            // ─── Deobfuscate ───────────────────────────────────────────
             deobfBtn.addEventListener('click', function() {
                 const input = output.value;
                 if (!input.trim()) { log('⚠️ Nothing to deobfuscate', 'warn');
-                    setStatus('Nothing to deobfuscate', 'warn'); return; }
+                    setStatus('Nothing to deobfuscate', 'yellow'); return; }
                 try {
-                    const decoded = deobfuscateOutput(input);
+                    const decoded = deobfuscate(input);
                     if (decoded.startsWith('Could') || decoded.startsWith('No') || decoded.startsWith('Deobf')) {
                         log('❌ ' + decoded, 'error');
-                        setStatus('Deobf failed', 'error');
+                        setStatus('Deobf failed', 'red');
                         output.value = decoded;
                     } else {
                         output.value = decoded;
                         updateCounts();
                         log('🔓 Deobfuscation successful', 'success');
-                        setStatus('Deobfuscated', 'ready');
+                        setStatus('Deobfuscated', 'green');
                     }
                 } catch (e) { log('❌ Deobf error: ' + e.message, 'error');
-                    setStatus('Deobf error', 'error'); }
+                    setStatus('Deobf error', 'red'); }
             });
 
-            // ─── Init ───
+            // ─── Init ──────────────────────────────────────────────────
             source.value = '-- example.lua\nprint("hello world")';
             setPreset('weak');
             updateCounts();
-            setStatus('Ready', 'ready');
-            log('🚀 finny.obf v4 — loader matches your sample exactly', 'info');
-            log('💡 Run on any code to get `return(function(...)local f=...` style', 'info');
+            setStatus('Ready', 'green');
+            log('🚀 finny.obf v5 — full rewrite, robust loader', 'info');
+            log('💡 Generates decimal‑escape loader matching your sample', 'info');
             toggleLogPanel(true);
             updateDashboard();
         })();
