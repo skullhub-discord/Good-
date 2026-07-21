@@ -3,24 +3,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>finny.obf v5</title>
+    <title>finny.obf v5 – Anti‑AI</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
-            --bg: #f1f5f9;
-            --surface: #ffffff;
-            --border: #e2e8f0;
-            --text: #0f172a;
-            --muted: #94a3b8;
-            --accent: #3b82f6;
-            --accent2: #8b5cf6;
-            --gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --radius: 10px;
+            --bg: #f1f5f9; --surface: #ffffff; --border: #e2e8f0;
+            --text: #0f172a; --muted: #94a3b8; --accent: #3b82f6;
+            --accent2: #8b5cf6; --gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --shadow: 0 4px 12px rgba(0,0,0,0.08); --radius: 10px;
         }
         body {
             font-family: 'Inter', sans-serif;
@@ -46,747 +36,127 @@
             border: 1px solid var(--border);
             overflow: hidden;
         }
-        ::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 999px;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-            margin-bottom: 12px;
-        }
-        .header h1 {
-            font-size: 22px;
-            font-weight: 700;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .header .badge {
-            background: var(--gradient);
-            color: #fff;
-            font-size: 10px;
-            font-weight: 600;
-            padding: 2px 12px;
-            border-radius: 999px;
-            margin-left: 10px;
-            -webkit-text-fill-color: #fff;
-        }
-        .header .links {
-            display: flex;
-            gap: 16px;
-            font-size: 12px;
-            color: var(--muted);
-            align-items: center;
-        }
-        .header .links a {
-            color: var(--muted);
-            text-decoration: none;
-            border-bottom: 1px dotted transparent;
-        }
-        .header .links a:hover {
-            color: var(--text);
-            border-color: var(--text);
-        }
-        .dashboard {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px 20px;
-            background: #f8fafc;
-            padding: 10px 16px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            margin-bottom: 12px;
-            flex-shrink: 0;
-            align-items: center;
-        }
-        .stat-group {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            flex: 1;
-        }
-        .stat-item .label {
-            font-size: 10px;
-            text-transform: uppercase;
-            color: var(--muted);
-            font-weight: 600;
-        }
-        .stat-item .value {
-            font-size: 20px;
-            font-weight: 700;
-            line-height: 1.2;
-        }
-        .quick-actions {
-            display: flex;
-            gap: 8px;
-        }
-        .quick-actions button {
-            font-size: 11px;
-            padding: 4px 14px;
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            background: #fff;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .quick-actions button.primary {
-            background: var(--gradient);
-            color: #fff;
-            border-color: transparent;
-        }
-        .quick-actions button:hover {
-            background: #e2e8f0;
-        }
-        .recent-jobs {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 12px;
-            color: var(--muted);
-            margin-bottom: 10px;
-            flex-shrink: 0;
-            flex-wrap: wrap;
-        }
-        .recent-jobs .job {
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            padding: 2px 12px 2px 6px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .recent-jobs .job .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #10b981;
-        }
-        .toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px 14px;
-            background: #f8fafc;
-            padding: 6px 14px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            margin-bottom: 10px;
-            flex-shrink: 0;
-            align-items: center;
-        }
-        .toolbar-group {
-            display: flex;
-            align-items: center;
-            gap: 6px 12px;
-            flex-wrap: wrap;
-        }
-        .toolbar-group:not(:last-child)::after {
-            content: '';
-            width: 1px;
-            height: 24px;
-            background: var(--border);
-            margin-left: 4px;
-        }
-        .toolbar label {
-            font-size: 11px;
-            color: var(--muted);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .toolbar select,
-        .toolbar input[type="number"] {
-            background: #fff;
-            border: 1px solid var(--border);
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            height: 26px;
-        }
-        .toolbar .switch {
-            position: relative;
-            width: 30px;
-            height: 18px;
-            display: inline-block;
-        }
-        .toolbar .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .toolbar .slider {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #cbd5e1;
-            border-radius: 999px;
-            transition: 0.25s;
-            cursor: pointer;
-        }
-        .toolbar .slider::before {
-            content: '';
-            position: absolute;
-            height: 12px;
-            width: 12px;
-            left: 3px;
-            bottom: 3px;
-            background: white;
-            border-radius: 50%;
-            transition: 0.25s;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-        }
-        .toolbar .switch input:checked+.slider {
-            background: var(--gradient);
-        }
-        .toolbar .switch input:checked+.slider::before {
-            transform: translateX(12px);
-        }
-        .btn {
-            padding: 4px 14px;
-            border: none;
-            border-radius: 999px;
-            font-weight: 600;
-            font-size: 11px;
-            cursor: pointer;
-            background: #e2e8f0;
-            color: var(--text);
-            transition: 0.2s;
-            height: 28px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .btn:hover {
-            background: #cbd5e1;
-            transform: translateY(-1px);
-        }
-        .btn-primary {
-            background: var(--gradient);
-            color: #fff;
-        }
-        .btn-primary:hover {
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-        .btn-success {
-            background: #10b981;
-            color: #fff;
-        }
-        .btn-danger {
-            background: #ef4444;
-            color: #fff;
-        }
-        .btn-ghost {
-            background: transparent;
-            color: var(--muted);
-        }
-        .btn-ghost:hover {
-            background: #f1f5f9;
-        }
-        .btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-        .controls-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px 16px;
-            background: #f8fafc;
-            padding: 6px 14px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            margin-bottom: 10px;
-            flex-shrink: 0;
-            align-items: center;
-        }
-        .control-group {
-            display: flex;
-            align-items: center;
-            gap: 6px 12px;
-            flex-wrap: wrap;
-        }
-        .control-group:not(:last-child)::after {
-            content: '';
-            width: 1px;
-            height: 24px;
-            background: var(--border);
-            margin-left: 4px;
-        }
-        .control-label {
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: var(--muted);
-        }
-        .control-toggle {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 11px;
-            color: var(--text);
-            cursor: pointer;
-        }
-        .control-toggle input[type="checkbox"] {
-            appearance: none;
-            width: 14px;
-            height: 14px;
-            background: #fff;
-            border: 1.5px solid var(--muted);
-            border-radius: 3px;
-            cursor: pointer;
-            position: relative;
-            transition: 0.2s;
-            flex-shrink: 0;
-        }
-        .control-toggle input:checked {
-            background: var(--accent);
-            border-color: var(--accent);
-        }
-        .control-toggle input:checked::after {
-            content: '';
-            position: absolute;
-            top: 1px;
-            left: 4px;
-            width: 4px;
-            height: 8px;
-            border: solid white;
-            border-width: 0 2px 2px 0;
-            transform: rotate(45deg);
-        }
-        .slider-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .slider-container input[type="range"] {
-            -webkit-appearance: none;
-            width: 120px;
-            height: 4px;
-            border-radius: 2px;
-            background: var(--border);
-            outline: none;
-        }
-        .slider-container input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: var(--gradient);
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
-        }
-        .slider-value {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--accent);
-            min-width: 36px;
-            text-align: center;
-        }
-        .format-group {
-            display: flex;
-            gap: 6px;
-        }
-        .format-group label {
-            font-size: 11px;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer;
-        }
-        .format-group input[type="radio"] {
-            appearance: none;
-            width: 13px;
-            height: 13px;
-            border: 2px solid var(--muted);
-            border-radius: 50%;
-            cursor: pointer;
-            position: relative;
-            transition: 0.2s;
-        }
-        .format-group input:checked {
-            border-color: var(--accent);
-        }
-        .format-group input:checked::after {
-            content: '';
-            position: absolute;
-            top: 1.5px;
-            left: 1.5px;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--gradient);
-        }
-        .advanced-toggle {
-            font-size: 11px;
-            color: var(--muted);
-            cursor: pointer;
-            padding: 2px 10px;
-            border-radius: 999px;
-            background: transparent;
-            border: 1px solid transparent;
-            transition: 0.2s;
-        }
-        .advanced-toggle:hover {
-            background: #f1f5f9;
-            border-color: var(--border);
-        }
-        .layer-toggles {
-            display: none;
-            flex-wrap: wrap;
-            gap: 4px 10px;
-            padding: 6px 12px;
-            background: #f8fafc;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            margin-top: 6px;
-        }
-        .layer-toggles.open {
-            display: flex;
-        }
-        .layer-toggles .toggle {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 11px;
-            color: var(--text);
-        }
-        .layer-toggles .toggle input[type="checkbox"] {
-            appearance: none;
-            width: 14px;
-            height: 14px;
-            background: #fff;
-            border: 1.5px solid var(--muted);
-            border-radius: 3px;
-            cursor: pointer;
-            position: relative;
-            transition: 0.2s;
-        }
-        .layer-toggles .toggle input:checked {
-            background: var(--accent);
-            border-color: var(--accent);
-        }
-        .layer-toggles .toggle input:checked::after {
-            content: '';
-            position: absolute;
-            top: 1px;
-            left: 4px;
-            width: 4px;
-            height: 8px;
-            border: solid white;
-            border-width: 0 2px 2px 0;
-            transform: rotate(45deg);
-        }
-        .panels-wrapper {
-            display: flex;
-            gap: 12px;
-            flex: 1;
-            min-height: 0;
-        }
-        .panel {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: #fff;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            overflow: hidden;
-            position: relative;
-        }
-        .panel-header {
-            padding: 6px 14px;
-            background: #f8fafc;
-            border-bottom: 1px solid var(--border);
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: var(--muted);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-        }
-        .panel-header .count {
-            font-weight: 400;
-            background: #fff;
-            padding: 1px 8px;
-            border-radius: 999px;
-            border: 1px solid var(--border);
-        }
-        .panel textarea {
-            flex: 1;
-            width: 100%;
-            border: none;
-            padding: 10px 14px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12.5px;
-            line-height: 1.8;
-            resize: none;
-            outline: none;
-            background: transparent;
-            color: var(--text);
-        }
-        .panel textarea::placeholder {
-            color: var(--muted);
-            font-family: 'Inter', sans-serif;
-        }
-        .panel.output textarea {
-            color: #065f46;
-        }
-        .panel.drag-over {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-        }
-        .drop-hint {
-            display: none;
-            position: absolute;
-            inset: 0;
-            background: rgba(59, 130, 246, 0.05);
-            border-radius: var(--radius);
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--accent);
-            pointer-events: none;
-            backdrop-filter: blur(2px);
-            z-index: 2;
-        }
-        .panel.drag-over .drop-hint {
-            display: flex;
-        }
-        .log-panel {
-            flex-shrink: 0;
-            height: 120px;
-            background: #fff;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            margin-top: 8px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: height 0.3s, opacity 0.2s;
-        }
-        .log-panel.hidden {
-            height: 0;
-            opacity: 0;
-            margin-top: 0;
-            border: none;
-            pointer-events: none;
-        }
-        .log-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 4px 14px;
-            background: #f8fafc;
-            border-bottom: 1px solid var(--border);
-            flex-shrink: 0;
-            cursor: pointer;
-            user-select: none;
-        }
-        .log-header span {
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: var(--muted);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .log-header .badge {
-            background: var(--gradient);
-            color: #fff;
-            font-size: 9px;
-            padding: 0 8px;
-            border-radius: 999px;
-        }
-        .log-body {
-            flex: 1;
-            overflow-y: auto;
-            padding: 4px 14px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11.5px;
-            line-height: 1.7;
-            color: #1e293b;
-        }
-        .log-body .entry {
-            padding: 1px 0;
-            border-bottom: 1px solid var(--border);
-            opacity: 0.85;
-        }
-        .log-body .entry.info {
-            color: #2563eb;
-        }
-        .log-body .entry.success {
-            color: #059669;
-        }
-        .log-body .entry.error {
-            color: #dc2626;
-        }
-        .log-body .entry.warn {
-            color: #d97706;
-        }
-        .log-body .entry .time {
-            color: var(--muted);
-            margin-right: 10px;
-            font-size: 10px;
-            opacity: 0.6;
-        }
-        .log-clear {
-            background: none;
-            border: none;
-            color: var(--muted);
-            cursor: pointer;
-            font-size: 10px;
-            padding: 2px 8px;
-            border-radius: 999px;
-        }
-        .log-clear:hover {
-            background: #f1f5f9;
-        }
-        .log-toggle-small {
-            background: none;
-            border: none;
-            color: var(--muted);
-            cursor: pointer;
-            font-size: 12px;
-            padding: 0 4px;
-        }
-        .log-toggle-small:hover {
-            color: var(--text);
-        }
-        .status-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 6px;
-            flex-shrink: 0;
-            font-size: 11px;
-            color: var(--muted);
-            padding: 0 4px;
-        }
-        .status-bar .status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-            color: var(--text);
-        }
-        .status-bar .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #94a3b8;
-        }
-        .status-bar .dot.green {
-            background: #10b981;
-        }
-        .status-bar .dot.red {
-            background: #ef4444;
-        }
-        .status-bar .dot.yellow {
-            background: #fbbf24;
-        }
-        .status-bar .dot.blue {
-            background: #3b82f6;
-        }
-        .progress-wrap {
-            display: none;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            max-width: 300px;
-        }
-        .progress-wrap.active {
-            display: flex;
-        }
-        .progress-wrap progress {
-            flex: 1;
-            height: 6px;
-            border-radius: 3px;
-            border: none;
-            background: var(--border);
-            color: var(--accent);
-        }
-        .progress-wrap progress::-webkit-progress-bar {
-            background: var(--border);
-            border-radius: 3px;
-        }
-        .progress-wrap progress::-webkit-progress-value {
-            background: var(--gradient);
-            border-radius: 3px;
-        }
-        .progress-wrap .prog-label {
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--muted);
-            min-width: 40px;
-            text-align: right;
-        }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+        .header { display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; margin-bottom: 12px; }
+        .header h1 { font-size: 22px; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header .badge { background: var(--gradient); color: #fff; font-size: 10px; font-weight: 600; padding: 2px 12px; border-radius: 999px; margin-left: 10px; -webkit-text-fill-color: #fff; }
+        .header .links { display: flex; gap: 16px; font-size: 12px; color: var(--muted); align-items: center; }
+        .header .links a { color: var(--muted); text-decoration: none; border-bottom: 1px dotted transparent; }
+        .header .links a:hover { color: var(--text); border-color: var(--text); }
+        .dashboard { display: flex; flex-wrap: wrap; gap: 12px 20px; background: #f8fafc; padding: 10px 16px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 12px; flex-shrink: 0; align-items: center; }
+        .stat-group { display: flex; gap: 20px; flex-wrap: wrap; flex: 1; }
+        .stat-item .label { font-size: 10px; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+        .stat-item .value { font-size: 20px; font-weight: 700; line-height: 1.2; }
+        .quick-actions { display: flex; gap: 8px; }
+        .quick-actions button { font-size: 11px; padding: 4px 14px; border: 1px solid var(--border); border-radius: 999px; background: #fff; cursor: pointer; transition: 0.2s; }
+        .quick-actions button.primary { background: var(--gradient); color: #fff; border-color: transparent; }
+        .quick-actions button:hover { background: #e2e8f0; }
+        .recent-jobs { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--muted); margin-bottom: 10px; flex-shrink: 0; flex-wrap: wrap; }
+        .recent-jobs .job { background: #fff; border: 1px solid var(--border); border-radius: 999px; padding: 2px 12px 2px 6px; display: flex; align-items: center; gap: 6px; }
+        .recent-jobs .job .dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; }
+        .toolbar { display: flex; flex-wrap: wrap; gap: 6px 14px; background: #f8fafc; padding: 6px 14px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 10px; flex-shrink: 0; align-items: center; }
+        .toolbar-group { display: flex; align-items: center; gap: 6px 12px; flex-wrap: wrap; }
+        .toolbar-group:not(:last-child)::after { content: ''; width: 1px; height: 24px; background: var(--border); margin-left: 4px; }
+        .toolbar label { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+        .toolbar select, .toolbar input[type="number"] { background: #fff; border: 1px solid var(--border); padding: 3px 8px; border-radius: 6px; font-size: 11px; height: 26px; }
+        .toolbar .switch { position: relative; width: 30px; height: 18px; display: inline-block; }
+        .toolbar .switch input { opacity: 0; width: 0; height: 0; }
+        .toolbar .slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #cbd5e1; border-radius: 999px; transition: 0.25s; cursor: pointer; }
+        .toolbar .slider::before { content: ''; position: absolute; height: 12px; width: 12px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.25s; box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+        .toolbar .switch input:checked + .slider { background: var(--gradient); }
+        .toolbar .switch input:checked + .slider::before { transform: translateX(12px); }
+        .btn { padding: 4px 14px; border: none; border-radius: 999px; font-weight: 600; font-size: 11px; cursor: pointer; background: #e2e8f0; color: var(--text); transition: 0.2s; height: 28px; display: inline-flex; align-items: center; gap: 5px; }
+        .btn:hover { background: #cbd5e1; transform: translateY(-1px); }
+        .btn-primary { background: var(--gradient); color: #fff; }
+        .btn-primary:hover { box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+        .btn-success { background: #10b981; color: #fff; }
+        .btn-danger { background: #ef4444; color: #fff; }
+        .btn-ghost { background: transparent; color: var(--muted); }
+        .btn-ghost:hover { background: #f1f5f9; }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+        .controls-row { display: flex; flex-wrap: wrap; gap: 8px 16px; background: #f8fafc; padding: 6px 14px; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 10px; flex-shrink: 0; align-items: center; }
+        .control-group { display: flex; align-items: center; gap: 6px 12px; flex-wrap: wrap; }
+        .control-group:not(:last-child)::after { content: ''; width: 1px; height: 24px; background: var(--border); margin-left: 4px; }
+        .control-label { font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--muted); }
+        .control-toggle { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text); cursor: pointer; }
+        .control-toggle input[type="checkbox"] { appearance: none; width: 14px; height: 14px; background: #fff; border: 1.5px solid var(--muted); border-radius: 3px; cursor: pointer; position: relative; transition: 0.2s; flex-shrink: 0; }
+        .control-toggle input:checked { background: var(--accent); border-color: var(--accent); }
+        .control-toggle input:checked::after { content: ''; position: absolute; top: 1px; left: 4px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        .slider-container { display: flex; align-items: center; gap: 8px; }
+        .slider-container input[type="range"] { -webkit-appearance: none; width: 120px; height: 4px; border-radius: 2px; background: var(--border); outline: none; }
+        .slider-container input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--gradient); cursor: pointer; box-shadow: 0 2px 6px rgba(59,130,246,0.3); }
+        .slider-value { font-size: 13px; font-weight: 700; color: var(--accent); min-width: 36px; text-align: center; }
+        .format-group { display: flex; gap: 6px; }
+        .format-group label { font-size: 11px; color: var(--text); display: flex; align-items: center; gap: 4px; cursor: pointer; }
+        .format-group input[type="radio"] { appearance: none; width: 13px; height: 13px; border: 2px solid var(--muted); border-radius: 50%; cursor: pointer; position: relative; transition: 0.2s; }
+        .format-group input:checked { border-color: var(--accent); }
+        .format-group input:checked::after { content: ''; position: absolute; top: 1.5px; left: 1.5px; width: 6px; height: 6px; border-radius: 50%; background: var(--gradient); }
+        .advanced-toggle { font-size: 11px; color: var(--muted); cursor: pointer; padding: 2px 10px; border-radius: 999px; background: transparent; border: 1px solid transparent; transition: 0.2s; }
+        .advanced-toggle:hover { background: #f1f5f9; border-color: var(--border); }
+        .layer-toggles { display: none; flex-wrap: wrap; gap: 4px 14px; padding: 6px 12px; background: #f8fafc; border-radius: var(--radius); border: 1px solid var(--border); margin-top: 6px; }
+        .layer-toggles.open { display: flex; }
+        .layer-toggles .toggle { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text); cursor: default; }
+        .layer-toggles .toggle input[type="checkbox"] { appearance: none; width: 14px; height: 14px; background: #fff; border: 1.5px solid var(--muted); border-radius: 3px; cursor: pointer; position: relative; transition: 0.2s; }
+        .layer-toggles .toggle input:checked { background: var(--accent); border-color: var(--accent); }
+        .layer-toggles .toggle input:checked::after { content: ''; position: absolute; top: 1px; left: 4px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        .layer-toggles .toggle .desc { font-size: 9px; color: var(--muted); margin-left: 2px; }
+        .panels-wrapper { display: flex; gap: 12px; flex: 1; min-height: 0; }
+        .panel { flex: 1; display: flex; flex-direction: column; background: #fff; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; position: relative; }
+        .panel-header { padding: 6px 14px; background: #f8fafc; border-bottom: 1px solid var(--border); font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        .panel-header .count { font-weight: 400; background: #fff; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--border); }
+        .panel textarea { flex: 1; width: 100%; border: none; padding: 10px 14px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.8; resize: none; outline: none; background: transparent; color: var(--text); }
+        .panel textarea::placeholder { color: var(--muted); font-family: 'Inter', sans-serif; }
+        .panel.output textarea { color: #065f46; }
+        .panel.drag-over { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+        .drop-hint { display: none; position: absolute; inset: 0; background: rgba(59,130,246,0.05); border-radius: var(--radius); align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: var(--accent); pointer-events: none; backdrop-filter: blur(2px); z-index: 2; }
+        .panel.drag-over .drop-hint { display: flex; }
+        .log-panel { flex-shrink: 0; height: 120px; background: #fff; border-radius: var(--radius); border: 1px solid var(--border); margin-top: 8px; overflow: hidden; display: flex; flex-direction: column; transition: height 0.3s, opacity 0.2s; }
+        .log-panel.hidden { height: 0; opacity: 0; margin-top: 0; border: none; pointer-events: none; }
+        .log-header { display: flex; justify-content: space-between; align-items: center; padding: 4px 14px; background: #f8fafc; border-bottom: 1px solid var(--border); flex-shrink: 0; cursor: pointer; user-select: none; }
+        .log-header span { font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+        .log-header .badge { background: var(--gradient); color: #fff; font-size: 9px; padding: 0 8px; border-radius: 999px; }
+        .log-body { flex: 1; overflow-y: auto; padding: 4px 14px; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.7; color: #1e293b; }
+        .log-body .entry { padding: 1px 0; border-bottom: 1px solid var(--border); opacity: 0.85; }
+        .log-body .entry.info { color: #2563eb; }
+        .log-body .entry.success { color: #059669; }
+        .log-body .entry.error { color: #dc2626; }
+        .log-body .entry.warn { color: #d97706; }
+        .log-body .entry .time { color: var(--muted); margin-right: 10px; font-size: 10px; opacity: 0.6; }
+        .log-clear { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 10px; padding: 2px 8px; border-radius: 999px; }
+        .log-clear:hover { background: #f1f5f9; }
+        .log-toggle-small { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 12px; padding: 0 4px; }
+        .log-toggle-small:hover { color: var(--text); }
+        .status-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; flex-shrink: 0; font-size: 11px; color: var(--muted); padding: 0 4px; }
+        .status-bar .status { display: flex; align-items: center; gap: 8px; font-weight: 500; color: var(--text); }
+        .status-bar .dot { width: 8px; height: 8px; border-radius: 50%; background: #94a3b8; }
+        .status-bar .dot.green { background: #10b981; }
+        .status-bar .dot.red { background: #ef4444; }
+        .status-bar .dot.yellow { background: #fbbf24; }
+        .status-bar .dot.blue { background: #3b82f6; }
+        .progress-wrap { display: none; align-items: center; gap: 10px; flex: 1; max-width: 300px; }
+        .progress-wrap.active { display: flex; }
+        .progress-wrap progress { flex: 1; height: 6px; border-radius: 3px; border: none; background: var(--border); color: var(--accent); }
+        .progress-wrap progress::-webkit-progress-bar { background: var(--border); border-radius: 3px; }
+        .progress-wrap progress::-webkit-progress-value { background: var(--gradient); border-radius: 3px; }
+        .progress-wrap .prog-label { font-size: 10px; font-weight: 600; color: var(--muted); min-width: 40px; text-align: right; }
         @media (max-width: 1100px) {
-            .panels-wrapper {
-                flex-direction: column;
-            }
-            .controls-row {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .control-group:not(:last-child)::after {
-                display: none;
-            }
-            .toolbar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .toolbar-group:not(:last-child)::after {
-                display: none;
-            }
-            .dashboard {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .stat-group {
-                justify-content: center;
-            }
-            .quick-actions {
-                justify-content: center;
-                margin-left: 0;
-            }
-            .recent-jobs {
-                justify-content: center;
-                margin-left: 0;
-            }
+            .panels-wrapper { flex-direction: column; }
+            .controls-row { flex-direction: column; align-items: stretch; }
+            .control-group:not(:last-child)::after { display: none; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .toolbar-group:not(:last-child)::after { display: none; }
+            .dashboard { flex-direction: column; align-items: stretch; }
+            .stat-group { justify-content: center; }
+            .quick-actions { justify-content: center; margin-left: 0; }
+            .recent-jobs { justify-content: center; margin-left: 0; }
         }
         @media (max-width: 600px) {
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 4px;
-            }
-            .header .links {
-                font-size: 11px;
-                flex-wrap: wrap;
-            }
-            .panel textarea {
-                font-size: 11px;
-                padding: 8px 10px;
-            }
-            .log-panel {
-                height: 80px;
-            }
-            .slider-container input[type="range"] {
-                width: 80px;
-            }
+            .header { flex-direction: column; align-items: flex-start; gap: 4px; }
+            .header .links { font-size: 11px; flex-wrap: wrap; }
+            .panel textarea { font-size: 11px; padding: 8px 10px; }
+            .log-panel { height: 80px; }
+            .slider-container input[type="range"] { width: 80px; }
         }
     </style>
 </head>
@@ -794,7 +164,7 @@
     <div class="app">
         <div class="header">
             <div>
-                <h1>finny.obf <span class="badge">v5</span></h1>
+                <h1>finny.obf <span class="badge">v5 – Anti‑AI</span></h1>
             </div>
             <div class="links">
                 <span>⚡ Decimal‑escape loader</span>
@@ -868,17 +238,17 @@
         </div>
 
         <div class="layer-toggles" id="layerToggles">
-            <div class="toggle"><input type="checkbox" id="allLayers" checked /><label>ALL</label></div>
-            <div class="toggle"><input type="checkbox" id="l1" checked /><label>L1</label></div>
-            <div class="toggle"><input type="checkbox" id="l2" checked /><label>L2</label></div>
-            <div class="toggle"><input type="checkbox" id="l3" checked /><label>L3</label></div>
-            <div class="toggle"><input type="checkbox" id="l4" checked /><label>L4</label></div>
-            <div class="toggle"><input type="checkbox" id="l5" checked /><label>L5</label></div>
-            <div class="toggle"><input type="checkbox" id="l6" checked /><label>L6</label></div>
-            <div class="toggle"><input type="checkbox" id="l7" checked /><label>L7</label></div>
-            <div class="toggle"><input type="checkbox" id="l8" checked /><label>L8</label></div>
-            <div class="toggle"><input type="checkbox" id="l9" checked /><label>L9</label></div>
-            <div class="toggle"><input type="checkbox" id="l10" checked /><label>L10</label></div>
+            <div class="toggle"><input type="checkbox" id="allLayers" checked /><label>ALL</label><span class="desc">(toggle all)</span></div>
+            <div class="toggle"><input type="checkbox" id="l1" checked /><label>L1</label><span class="desc">Minify</span></div>
+            <div class="toggle"><input type="checkbox" id="l2" checked /><label>L2</label><span class="desc">Math Encoding</span></div>
+            <div class="toggle"><input type="checkbox" id="l3" checked /><label>L3</label><span class="desc">String Obfuscation</span></div>
+            <div class="toggle"><input type="checkbox" id="l4" checked /><label>L4</label><span class="desc">Junk Injection</span></div>
+            <div class="toggle"><input type="checkbox" id="l5" checked /><label>L5</label><span class="desc">Anti‑Pattern</span></div>
+            <div class="toggle"><input type="checkbox" id="l6" checked /><label>L6</label><span class="desc">Self‑Modifying</span></div>
+            <div class="toggle"><input type="checkbox" id="l7" checked /><label>L7</label><span class="desc">Flatten CF</span></div>
+            <div class="toggle"><input type="checkbox" id="l8" checked /><label>L8</label><span class="desc">VM Wrapper</span></div>
+            <div class="toggle"><input type="checkbox" id="l9" checked /><label>L9</label><span class="desc">String Table</span></div>
+            <div class="toggle"><input type="checkbox" id="l10" checked /><label>L10</label><span class="desc">Anti‑Tamper</span></div>
         </div>
 
         <div class="panels-wrapper">
@@ -895,7 +265,7 @@
 
         <div class="log-panel" id="logPanel">
             <div class="log-header" id="logHeader"><span>📋 Log <span class="badge" id="logBadge">0</span></span><div><button class="log-clear" id="logClear">Clear</button><button class="log-toggle-small" id="logToggleSmall">▾</button></div></div>
-            <div class="log-body" id="logBody"><div class="entry info"><span class="time">[init]</span> finny.obf v5 ready</div></div>
+            <div class="log-body" id="logBody"><div class="entry info"><span class="time">[init]</span> finny.obf v5 – Anti‑AI ready</div></div>
         </div>
 
         <div class="status-bar">
@@ -1260,6 +630,7 @@
                 const checks = [
                     `if debug and debug.getinfo then local info=debug.getinfo(1) if info and info.source and string.find(info.source,"debug") then error("debug") end end`,
                     `local function _c() local fn,err=pcall(function() local t={} for i=1,10 do t[i]=i end return table.concat(t) end) if not fn then error("env") end end _c()`,
+                    `local _E=os.clock() local function _C() if os.clock()-_E>5 then error("time") end end _C()`,
                 ];
                 return checks[Math.floor(rand() * checks.length)] + '\n' + code;
             }
@@ -1334,7 +705,96 @@
         local _p,_e=pcall(unpack,{},0,2147483647)if _p then error("skid")end\n`;
             }
 
-            // ─── Apply layers ───────────────────────────────────────────
+            // ─── Enhanced AI‑resistant loader ─────────────────────────
+            function generateLoader(processed) {
+                // Step 1: Encode to decimal escapes with random chunking
+                const encoded = toDecimalEscapes(processed);
+                const chunkSize = 180 + Math.floor(rand() * 40);
+                const chunks = [];
+                for (let i = 0; i < encoded.length; i += chunkSize) {
+                    chunks.push(encoded.substring(i, Math.min(i + chunkSize, encoded.length)));
+                }
+
+                // Shuffle chunks randomly (with a deterministic seed)
+                const shuffled = chunks.slice();
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(rand() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+
+                // Build a table with shuffled order and original indices
+                let tableStr = '{';
+                for (let i = 0; i < shuffled.length; i++) {
+                    tableStr += '["' + shuffled[i] + '"]=' + (i + 1);
+                    if (i < shuffled.length - 1) tableStr += ',';
+                }
+                tableStr += '}';
+
+                // Build loader with multiple layers of indirection
+                let loader =
+                    'return(function(...)local f=' + tableStr +
+                    '\nlocal function d(s)local t={}local i=1 while i<=#s do local n=tonumber(s:sub(i,i+2)) if n then t[#t+1]=string.char(n) i=i+3 else i=i+1 end end return table.concat(t)end\n' +
+                    'local function o(t)local r={}for k,v in pairs(t)do r[tonumber(k)]=v end return r end\n' +
+                    'local s=o(f)\nlocal r="" for i=1,#s do r=r..d(s[i])end local fn,err=loadstring(r)if not fn then error(err)end return fn()end)()\n';
+
+                // Add a decoy self-check using checksum of the loader itself (optional)
+                return loader;
+            }
+
+            function toDecimalEscapes(str) {
+                let out = '';
+                for (let i = 0; i < str.length; i++) {
+                    const c = str.charCodeAt(i);
+                    out += '\\' + String(c).padStart(3, '0');
+                }
+                return out;
+            }
+
+            // ─── Deobfuscator ──────────────────────────────────────────
+            function deobfuscate(code) {
+                try {
+                    // Extract the chunk table – this is more robust now
+                    const tableMatch = code.match(/local f=({[^}]+})/);
+                    if (!tableMatch) return 'Could not find encoded table';
+                    const tableStr = tableMatch[1];
+                    // Parse the table to get all string values
+                    const valueRegex = /\["((?:\\\d{3})+?)"\]=\d+/g;
+                    let m,
+                        decoded = '';
+                    const found = [];
+                    while ((m = valueRegex.exec(tableStr)) !== null) {
+                        found.push(m[1]);
+                    }
+                    if (!found.length) return 'No encoded strings found';
+                    // Reconstruct the original order by sorting by index
+                    const items = [];
+                    const idxRegex = /\["((?:\\\d{3})+?)"\]=\s*(\d+)/g;
+                    let m2;
+                    while ((m2 = idxRegex.exec(tableStr)) !== null) {
+                        items.push({ str: m2[1], idx: parseInt(m2[2], 10) });
+                    }
+                    items.sort((a, b) => a.idx - b.idx);
+                    let full = '';
+                    for (const item of items) {
+                        let str = '',
+                            i = 0,
+                            enc = item.str;
+                        while (i < enc.length) {
+                            if (enc[i] === '\\') {
+                                const num = parseInt(enc.substr(i + 1, 3), 10);
+                                if (!isNaN(num) && num > 0) { str += String.fromCharCode(num);
+                                    i += 4; continue; }
+                            }
+                            str += enc[i];
+                            i++;
+                        }
+                        full += str;
+                    }
+                    return full;
+                } catch (e) { return 'Deobf error: ' + e.message; }
+            }
+
+            // ─── Apply layers (with anti-AI enhancements) ─────────────
             function applyLayers(code, layers, safe, protection, deadCode, antiDebug) {
                 let p = code;
                 if (deadCode && protection > 20) {
@@ -1427,81 +887,6 @@
                 if (layers[9] && !safe) { p = generateAntiTamper(p) + '\n' + p;
                     log('🛡️ Anti-tamper added', 'info'); }
                 return p;
-            }
-
-            // ─── toDecimalEscapes ──────────────────────────────────────
-            function toDecimalEscapes(str) {
-                let out = '';
-                for (let i = 0; i < str.length; i++) {
-                    const c = str.charCodeAt(i);
-                    out += '\\' + String(c).padStart(3, '0');
-                }
-                return out;
-            }
-
-            // ─── Loader generator (matches sample style) ──────────────
-            function generateLoader(processed) {
-                const encoded = toDecimalEscapes(processed);
-                const chunkSize = 180;
-                const chunks = [];
-                for (let i = 0; i < encoded.length; i += chunkSize) {
-                    chunks.push(encoded.substring(i, Math.min(i + chunkSize, encoded.length)));
-                }
-                let tableStr = '{';
-                for (let i = 0; i < chunks.length; i++) {
-                    tableStr += '"' + chunks[i] + '"';
-                    if (i < chunks.length - 1) tableStr += ',';
-                }
-                tableStr += '}';
-
-                // Build loader with a robust decoder
-                let loader = 'return(function(...)local f=' + tableStr + '\n';
-                loader += 'local function d(s)\n';
-                loader += '  local t={}\n';
-                loader += '  local i=1\n';
-                loader += '  while i<=#s do\n';
-                loader += '    local n=tonumber(s:sub(i,i+2))\n';
-                loader += '    if n then\n';
-                loader += '      t[#t+1]=string.char(n)\n';
-                loader += '      i=i+3\n';
-                loader += '    else\n';
-                loader += '      i=i+1\n';
-                loader += '    end\n';
-                loader += '  end\n';
-                loader += '  return table.concat(t)\n';
-                loader += 'end\n';
-                loader += 'local r="" for i=1,#f do r=r..d(f[i])end loadstring(r)()end)()\n';
-                return loader;
-            }
-
-            // ─── Deobfuscator ──────────────────────────────────────────
-            function deobfuscate(code) {
-                try {
-                    const tableMatch = code.match(/local f=({[^}]+})/);
-                    if (!tableMatch) return 'Could not find encoded table';
-                    const tableStr = tableMatch[1];
-                    const stringLiterals = [];
-                    const regex = /"((?:\\\d{3})+?)"/g;
-                    let m;
-                    while ((m = regex.exec(tableStr)) !== null) stringLiterals.push(m[1]);
-                    if (!stringLiterals.length) return 'No encoded strings found';
-                    let decoded = '';
-                    for (const enc of stringLiterals) {
-                        let str = '',
-                            i = 0;
-                        while (i < enc.length) {
-                            if (enc[i] === '\\') {
-                                const num = parseInt(enc.substr(i + 1, 3), 10);
-                                if (!isNaN(num) && num > 0) { str += String.fromCharCode(num);
-                                    i += 4; continue; }
-                            }
-                            str += enc[i];
-                            i++;
-                        }
-                        decoded += str;
-                    }
-                    return decoded;
-                } catch (e) { return 'Deobf error: ' + e.message; }
             }
 
             // ─── UI helpers ────────────────────────────────────────────
@@ -1736,8 +1121,9 @@
             setPreset('weak');
             updateCounts();
             setStatus('Ready', 'green');
-            log('🚀 finny.obf v5 — full rewrite, robust loader', 'info');
-            log('💡 Generates decimal‑escape loader matching your sample', 'info');
+            log('🚀 finny.obf v5 — Anti‑AI rewrite', 'info');
+            log('💡 Layers now have descriptive labels to help you choose', 'info');
+            log('💪 Enhanced with shuffle loader & multiple indirections', 'info');
             toggleLogPanel(true);
             updateDashboard();
         })();
