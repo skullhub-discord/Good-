@@ -705,9 +705,9 @@
         local _p,_e=pcall(unpack,{},0,2147483647)if _p then error("skid")end\n`;
             }
 
-            // ─── Enhanced AI‑resistant loader ─────────────────────────
+            // ─── Enhanced AI‑resistant loader with random letter for `local f` ──
             function generateLoader(processed) {
-                // Step 1: Encode to decimal escapes with random chunking
+                // Encode to decimal escapes with random chunking
                 const encoded = toDecimalEscapes(processed);
                 const chunkSize = 180 + Math.floor(rand() * 40);
                 const chunks = [];
@@ -715,12 +715,15 @@
                     chunks.push(encoded.substring(i, Math.min(i + chunkSize, encoded.length)));
                 }
 
-                // Shuffle chunks randomly (with a deterministic seed)
+                // Shuffle chunks randomly
                 const shuffled = chunks.slice();
                 for (let i = shuffled.length - 1; i > 0; i--) {
                     const j = Math.floor(rand() * (i + 1));
                     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
                 }
+
+                // Pick a random lowercase letter for the variable name
+                const varLetter = String.fromCharCode(97 + Math.floor(rand() * 26));
 
                 // Build a table with shuffled order and original indices
                 let tableStr = '{';
@@ -730,14 +733,13 @@
                 }
                 tableStr += '}';
 
-                // Build loader with multiple layers of indirection
+                // Build loader with multiple layers of indirection and the random variable
                 let loader =
-                    'return(function(...)local f=' + tableStr +
+                    'return(function(...)local ' + varLetter + '=' + tableStr +
                     '\nlocal function d(s)local t={}local i=1 while i<=#s do local n=tonumber(s:sub(i,i+2)) if n then t[#t+1]=string.char(n) i=i+3 else i=i+1 end end return table.concat(t)end\n' +
                     'local function o(t)local r={}for k,v in pairs(t)do r[tonumber(k)]=v end return r end\n' +
-                    'local s=o(f)\nlocal r="" for i=1,#s do r=r..d(s[i])end local fn,err=loadstring(r)if not fn then error(err)end return fn()end)()\n';
+                    'local s=o(' + varLetter + ')\nlocal r="" for i=1,#s do r=r..d(s[i])end local fn,err=load(r)if not fn then error(err)end return fn()end)()\n';
 
-                // Add a decoy self-check using checksum of the loader itself (optional)
                 return loader;
             }
 
@@ -753,11 +755,9 @@
             // ─── Deobfuscator ──────────────────────────────────────────
             function deobfuscate(code) {
                 try {
-                    // Extract the chunk table – this is more robust now
-                    const tableMatch = code.match(/local f=({[^}]+})/);
+                    const tableMatch = code.match(/local\s+[a-z]\s*=\s*({[^}]+})/);
                     if (!tableMatch) return 'Could not find encoded table';
                     const tableStr = tableMatch[1];
-                    // Parse the table to get all string values
                     const valueRegex = /\["((?:\\\d{3})+?)"\]=\d+/g;
                     let m,
                         decoded = '';
@@ -766,7 +766,6 @@
                         found.push(m[1]);
                     }
                     if (!found.length) return 'No encoded strings found';
-                    // Reconstruct the original order by sorting by index
                     const items = [];
                     const idxRegex = /\["((?:\\\d{3})+?)"\]=\s*(\d+)/g;
                     let m2;
@@ -1124,6 +1123,7 @@
             log('🚀 finny.obf v5 — Anti‑AI rewrite', 'info');
             log('💡 Layers now have descriptive labels to help you choose', 'info');
             log('💪 Enhanced with shuffle loader & multiple indirections', 'info');
+            log('🔄 Final loader uses `load()` and a random letter for the table var', 'info');
             toggleLogPanel(true);
             updateDashboard();
         })();
